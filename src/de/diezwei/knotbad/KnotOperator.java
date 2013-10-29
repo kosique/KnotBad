@@ -4,6 +4,7 @@ public abstract class KnotOperator extends Knot {
 	public enum Type {
 		ADDITION,
 		DIVISION,
+		FACTORIAL,
 		MULTIPLICATION,
 		SUBTRACTION,
 	}
