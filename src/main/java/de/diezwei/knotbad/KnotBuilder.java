@@ -1,10 +1,15 @@
 package de.diezwei.knotbad;
 
+import java.text.MessageFormat;
+
+import de.diezwei.knotbad.exception.UnexpectedNotBadException;
+import de.diezwei.knotbad.knot.BinaryKnot;
 import de.diezwei.knotbad.knot.Knot;
-import de.diezwei.knotbad.knot.Value;
 import de.diezwei.knotbad.knot.UnaryKnot;
+import de.diezwei.knotbad.knot.Value;
 import de.diezwei.knotbad.operator.Addition;
 import de.diezwei.knotbad.operator.Division;
+import de.diezwei.knotbad.operator.Factorial;
 import de.diezwei.knotbad.operator.Multiplication;
 import de.diezwei.knotbad.operator.Subtraction;
 
@@ -17,32 +22,62 @@ public class KnotBuilder
 		this.knot = new Value(value);
 	}
 
+	public KnotBuilder(double value)
+	{
+		this.knot = new Value(value);
+	}
+
 	public KnotBuilder(KnotBuilder builder)
 	{
 		this.knot = builder.getKnot();
 	}
 
-	public KnotBuilder(Class<? extends UnaryKnot> type, int value)
+	public KnotBuilder knot(Class<? extends UnaryKnot> type)
 	{
 		try
 		{
-			this.knot = type.getConstructor(Knot.class).newInstance(new Value(value));
+			if (type != null)
+			{
+				this.knot = type.getConstructor(Knot.class).newInstance(this.knot);
+			}
+
+			return this;
 		}
 		catch (final ReflectiveOperationException e)
 		{
-			e.printStackTrace();
+			throw new UnexpectedNotBadException(MessageFormat.format("Cannot instantiate knot of type {0}", type), e);
 		}
 	}
 
-	public KnotBuilder(Class<? extends UnaryKnot> type, KnotBuilder builder)
+	public KnotBuilder knot(Class<? extends BinaryKnot> type, int value)
 	{
 		try
 		{
-			this.knot = type.getConstructor(Knot.class).newInstance(builder.getKnot());
+			if (type != null)
+			{
+				this.knot = type.getConstructor(Knot.class).newInstance(this.knot, new Value(value));
+			}
+
+			return this;
 		}
 		catch (final ReflectiveOperationException e)
 		{
-			e.printStackTrace();
+			throw new UnexpectedNotBadException(MessageFormat.format("Cannot instantiate knot of type {0}", type), e);
+		}
+	}
+
+	public KnotBuilder(Class<? extends BinaryKnot> type, KnotBuilder builder)
+	{
+		try
+		{
+			if (type != null)
+			{
+				this.knot = type.getConstructor(Knot.class).newInstance(this.knot, builder.getKnot());
+			}
+		}
+		catch (final ReflectiveOperationException e)
+		{
+			throw new UnexpectedNotBadException(MessageFormat.format("Cannot instantiate knot of type {0}", type), e);
 		}
 	}
 
@@ -51,7 +86,7 @@ public class KnotBuilder
 		return this.knot;
 	}
 
-	public KnotBuilder plus(int value)
+	public KnotBuilder plus(double value)
 	{
 		this.knot = new Addition(this.knot, new Value(value));
 
@@ -65,7 +100,7 @@ public class KnotBuilder
 		return this;
 	}
 
-	public KnotBuilder minus(int value)
+	public KnotBuilder minus(double value)
 	{
 		this.knot = new Subtraction(this.knot, new Value(value));
 
@@ -79,7 +114,7 @@ public class KnotBuilder
 		return this;
 	}
 
-	public KnotBuilder multiply(int value)
+	public KnotBuilder multiply(double value)
 	{
 		this.knot = new Multiplication(this.knot, new Value(value));
 
@@ -93,7 +128,7 @@ public class KnotBuilder
 		return this;
 	}
 
-	public KnotBuilder divide(int value)
+	public KnotBuilder divide(double value)
 	{
 		this.knot = new Division(this.knot, new Value(value));
 
@@ -109,7 +144,8 @@ public class KnotBuilder
 
 	public KnotBuilder factorial()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		this.knot = new Factorial(this.knot);
+
+		return this;
 	}
 }

@@ -15,7 +15,7 @@ public class KnotBuilderTest
 	{
 		final Knot knot = new KnotBuilder(10).getKnot();
 
-		assertThat(knot.resolve(), equalTo(10));
+		assertThat(knot.resolve(), equalTo(10.0));
 	}
 
 	@Test
@@ -25,7 +25,7 @@ public class KnotBuilderTest
 				.plus(5)
 				.getKnot();
 
-		assertThat(knot.resolve(), equalTo(15));
+		assertThat(knot.resolve(), equalTo(15.0));
 	}
 
 	@Test
@@ -36,39 +36,39 @@ public class KnotBuilderTest
 				.plus(3)
 				.getKnot();
 
-		assertThat(knot.resolve(), equalTo(6));
+		assertThat(knot.resolve(), equalTo(6.0));
 	}
 
 	@Test
 	public void testSubstractionOfThreeValues() throws Exception
 	{
-		final Knot knot = new KnotBuilder(10)
+		final Knot knot = new KnotBuilder(10.0)
 				.minus(1)
 				.minus(2)
 				.getKnot();
 
-		assertThat(knot.resolve(), equalTo(7));
+		assertThat(knot.resolve(), equalTo(7.0));
 	}
 
 	@Test
 	public void testMixingAdditionAndSubstraction() throws Exception
 	{
-		final Knot knot = new KnotBuilder(10)
+		final Knot knot = new KnotBuilder(10.0)
 				.minus(1)
 				.plus(2)
 				.getKnot();
 
-		assertThat(knot.resolve(), equalTo(11));
+		assertThat(knot.resolve(), equalTo(11.0));
 	}
 
 	@Test
 	public void testMultiplication() throws Exception
 	{
-		final Knot knot = new KnotBuilder(10)
+		final Knot knot = new KnotBuilder(10.0)
 				.multiply(3)
 				.getKnot();
 
-		assertThat(knot.resolve(), equalTo(30));
+		assertThat(knot.resolve(), equalTo(30.0));
 	}
 
 	@Test
@@ -78,7 +78,7 @@ public class KnotBuilderTest
 				.divide(4)
 				.getKnot();
 
-		assertThat(knot.resolve(), equalTo(2));
+		assertThat(knot.resolve(), equalTo(2.5));
 	}
 
 	@Test
@@ -86,11 +86,11 @@ public class KnotBuilderTest
 	{
 		final Knot knot = new KnotBuilder(10)
 				.multiply(2)
-				.plus(2)
+				.plus(1)
 				.divide(7)
 				.getKnot();
 
-		assertThat(knot.resolve(), equalTo(3));
+		assertThat(knot.resolve(), equalTo(3.0));
 	}
 
 	@Test
@@ -99,11 +99,11 @@ public class KnotBuilderTest
 		final KnotBuilder builder = new KnotBuilder(100)
 				.plus(20);
 
-		final Knot tree = new KnotBuilder(5)
+		final Knot tree = new KnotBuilder(5.0)
 				.plus(builder)
 				.getKnot();
 
-		assertThat(tree.resolve(), equalTo(125));
+		assertThat(tree.resolve(), equalTo(125.0));
 	}
 
 	@Test
@@ -119,7 +119,7 @@ public class KnotBuilderTest
 				.plus(builder2)
 				.getKnot();
 
-		assertThat(tree.resolve(), equalTo(5));
+		assertThat(tree.resolve(), equalTo(5.0));
 	}
 
 	@Test
@@ -132,37 +132,38 @@ public class KnotBuilderTest
 				.multiply(builder)
 				.getKnot();
 
-		assertThat(tree.resolve(), equalTo(600));
+		assertThat(tree.resolve(), equalTo(600.0));
 	}
 
 	@Test
 	public void testFactorialOf1() throws Exception
 	{
-		final Knot knot = new KnotBuilder(Factorial.class, 1)
+		final Knot knot = new KnotBuilder(1)
+				.factorial()
 				.getKnot();
 
-		assertThat(knot.resolve(), equalTo(1));
+		assertThat(knot.resolve(), equalTo(1.0));
 	}
 
 	@Test
 	public void testFactorialOf3() throws Exception
 	{
-		final Knot knot = new KnotBuilder(Factorial.class, 3)
+		final Knot knot = new KnotBuilder(3)
+				.knot(Factorial.class)
 				.getKnot();
 
-		assertThat(knot.resolve(), equalTo(6));
+		assertThat(knot.resolve(), equalTo(6.0));
 	}
 
 	@Test
 	public void testFactorialOfKnot() throws Exception
 	{
-		final KnotBuilder tree = new KnotBuilder(2)
-				.plus(3);
-
-		final Knot knot = new KnotBuilder(Factorial.class, tree)
+		final Knot knot = new KnotBuilder(2)
+				.plus(3)
+				.factorial()
 				.getKnot();
 
-		assertThat(knot.resolve(), equalTo(120));
+		assertThat(knot.resolve(), equalTo(120.0));
 	}
 
 	@Test
@@ -177,6 +178,6 @@ public class KnotBuilderTest
 			builder.multiply(i);
 		}
 
-		assertThat(builder.getKnot().resolve(), equalTo(3628800));
+		assertThat(builder.getKnot().resolve(), equalTo(3628800.0));
 	}
 }

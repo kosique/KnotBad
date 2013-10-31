@@ -11,12 +11,12 @@ public class Factorial extends UnaryKnot
 	}
 
 	@Override
-	public Integer resolve() throws Exception
+	public double resolve()
 	{
 		return factorialRecursive(getChild1().resolve());
 	}
 
-	private Integer factorialRecursive(final Integer value)
+	private double factorialRecursive(final double value)
 	{
 		if (value <= 1)
 		{

@@ -1,17 +1,21 @@
 package de.diezwei.knotbad.knot;
 
-
 public class Value extends Knot
 {
-	private final Integer value;
+	private final double value;
 
 	public Value(final int value)
 	{
 		this.value = value;
 	}
 
+	public Value(final double value)
+	{
+		this.value = value;
+	}
+
 	@Override
-	public Integer resolve()
+	public double resolve()
 	{
 		return value;
 	}

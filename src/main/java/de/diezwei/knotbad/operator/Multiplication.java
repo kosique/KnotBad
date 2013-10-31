@@ -11,7 +11,7 @@ public class Multiplication extends BinaryKnot
 	}
 
 	@Override
-	public Integer resolve() throws Exception
+	public double resolve()
 	{
 		return getChild1().resolve() * getChild2().resolve();
 	}
