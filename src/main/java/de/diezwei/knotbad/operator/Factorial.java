@@ -2,9 +2,15 @@ package de.diezwei.knotbad.operator;
 
 import de.diezwei.knotbad.knot.Knot;
 import de.diezwei.knotbad.knot.UnaryKnot;
+import de.diezwei.knotbad.parser.token.AssocType;
 
 public class Factorial extends UnaryKnot
 {
+    public Factorial()
+    {
+        super();
+    }
+    
 	public Factorial(Knot child1)
 	{
 		super(child1);
@@ -25,4 +31,23 @@ public class Factorial extends UnaryKnot
 
 		return (value * factorialRecursive(value - 1));
 	}
+	
+    @Override
+    public AssocType getAssocType()
+    {
+        return AssocType.LEFT;
+    }
+
+    @Override
+    public int getPrecedence()
+    {
+        return 10;
+    }
+    
+
+    @Override
+    public String getLiteral()
+    {
+        return "!";
+    }
 }

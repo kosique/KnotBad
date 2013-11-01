@@ -2,7 +2,7 @@ package de.diezwei.knotbad;
 
 import java.text.MessageFormat;
 
-import de.diezwei.knotbad.exception.UnexpectedNotBadException;
+import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
 import de.diezwei.knotbad.knot.BinaryKnot;
 import de.diezwei.knotbad.knot.Knot;
 import de.diezwei.knotbad.knot.UnaryKnot;
@@ -45,7 +45,7 @@ public class KnotBuilder
 		}
 		catch (final ReflectiveOperationException e)
 		{
-			throw new UnexpectedNotBadException(MessageFormat.format("Cannot instantiate knot of type {0}", type), e);
+			throw new UnexpectedKnotBadException(MessageFormat.format("Cannot instantiate knot of type {0}", type), e);
 		}
 	}
 
@@ -62,7 +62,7 @@ public class KnotBuilder
 		}
 		catch (final ReflectiveOperationException e)
 		{
-			throw new UnexpectedNotBadException(MessageFormat.format("Cannot instantiate knot of type {0}", type), e);
+			throw new UnexpectedKnotBadException(MessageFormat.format("Cannot instantiate knot of type {0}", type), e);
 		}
 	}
 
@@ -77,7 +77,7 @@ public class KnotBuilder
 		}
 		catch (final ReflectiveOperationException e)
 		{
-			throw new UnexpectedNotBadException(MessageFormat.format("Cannot instantiate knot of type {0}", type), e);
+			throw new UnexpectedKnotBadException(MessageFormat.format("Cannot instantiate knot of type {0}", type), e);
 		}
 	}
 

@@ -10,7 +10,12 @@ public abstract class BinaryKnot extends UnaryKnot
 		this.child2 = child2;
 	}
 
-	public Knot getChild2()
+	public BinaryKnot()
+    {
+	    this(new NoOp(), new NoOp());
+    }
+
+    public Knot getChild2()
 	{
 		return child2;
 	}

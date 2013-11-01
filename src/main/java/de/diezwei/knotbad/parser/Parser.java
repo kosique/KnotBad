@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import de.diezwei.knotbad.knot.Knot;
+import de.diezwei.knotbad.parser.token.Token;
 
 public class Parser
 {
@@ -16,17 +17,6 @@ public class Parser
 
 	void tokenizeNumbers(String input)
 	{
-		for (final char c : input.toCharArray())
-		{
-			if (token.append(c))
-			{
-
-			}
-			else
-			{
-
-			}
-
-		}
+		
 	}
 }
