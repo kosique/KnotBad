@@ -31,7 +31,7 @@ public class ParserTest
         final Stack<Token> stack = new Stack<>();
         final List<Token> output = new ArrayList<>();
 
-        final StreamTokenizer tokenizer = new StreamTokenizer(new StringReader("1+2*3*4+5"));
+        final StreamTokenizer tokenizer = new StreamTokenizer(new StringReader("1+2*3*4-5"));
 
         for (int tval; (tval = tokenizer.nextToken()) != StreamTokenizer.TT_EOF;)
         {
@@ -40,7 +40,12 @@ public class ParserTest
             case StreamTokenizer.TT_NUMBER:
                 System.out.println("Zahl in Ausgabe: " + tokenizer.nval);
 
-                output.add(new ValueToken(tokenizer.nval));
+                 if (tokenizer.nval < 0)
+                 {
+                     doOperator(stack, output, '-');
+                 }
+                
+                output.add(new ValueToken(Math.abs(tokenizer.nval)));
 
                 break;
             case StreamTokenizer.TT_WORD:
@@ -55,45 +60,9 @@ public class ParserTest
                 break;
             default:
 
-                final Token token = new OperatorToken((char) tokenizer.ttype);
-
-                if (!stack.empty())
-                {
-
-                    final Token lastElement = stack.lastElement();
-
-                    final String literal = String.valueOf((char) tokenizer.ttype);
-
-                    AssocType lastElementAssocType = Operators.getInstance().getAssocType(stack.lastElement().getRawOp());
-                    boolean lastElementIsOperator = stack.lastElement().isOperator();
-                    int lastElementPrecedence = Operators.getInstance().getPrecedence(stack.lastElement().getRawOp());
-
-                    final int tokenPrecedence = Operators.getInstance().getPrecedence(String.valueOf((char) tokenizer.ttype));
-
-                    while (!stack.empty() && lastElementIsOperator
-                            && (((lastElementAssocType == AssocType.LEFT) && (lastElementPrecedence >= tokenPrecedence))
-                            || (lastElementPrecedence > tokenPrecedence)))
-                    {
-                        final Token pop = stack.pop();
-
-                        System.out.println("Operator von Stack in Ausgabe: " + pop);
-
-                        output.add(pop);
-
-                        System.out.println(lastElement.getRawOp() + " :: " + token.getRawOp());
-                        System.out.println(lastElementPrecedence + " :: " + tokenPrecedence);
-
-                        if (!stack.empty())
-                        {
-                            lastElementAssocType = Operators.getInstance().getAssocType(stack.lastElement().getRawOp());
-                            lastElementIsOperator = stack.lastElement().isOperator();
-                            lastElementPrecedence = Operators.getInstance().getPrecedence(stack.lastElement().getRawOp());
-                        }
-                    }
-                }
-
-                System.out.println("Operator in Stack: " + token);
-                stack.add(token);
+               final char ttype =  (char) tokenizer.ttype;
+                
+                doOperator(stack, output, ttype);
 
             }
         }
@@ -108,5 +77,46 @@ public class ParserTest
         {
             System.out.println(token);
         }
+    }
+
+    private void doOperator(final Stack<Token> stack, final List<Token> output, final char ttype)
+    {
+        final Token token = new OperatorToken(ttype);
+
+        if (!stack.empty())
+        {
+
+            final Token lastElement = stack.lastElement();
+
+            AssocType lastElementAssocType = Operators.getInstance().getAssocType(stack.lastElement().getRawOp());
+            boolean lastElementIsOperator = stack.lastElement().isOperator();
+            int lastElementPrecedence = Operators.getInstance().getPrecedence(stack.lastElement().getRawOp());
+
+            final int tokenPrecedence = Operators.getInstance().getPrecedence(String.valueOf(ttype));
+
+            while (!stack.empty() && lastElementIsOperator
+                    && (((lastElementAssocType == AssocType.LEFT) && (lastElementPrecedence >= tokenPrecedence))
+                    || (lastElementPrecedence > tokenPrecedence)))
+            {
+                final Token pop = stack.pop();
+
+                System.out.println("Operator von Stack in Ausgabe: " + pop);
+
+                output.add(pop);
+
+                System.out.println(lastElement.getRawOp() + " :: " + token.getRawOp());
+                System.out.println(lastElementPrecedence + " :: " + tokenPrecedence);
+
+                if (!stack.empty())
+                {
+                    lastElementAssocType = Operators.getInstance().getAssocType(stack.lastElement().getRawOp());
+                    lastElementIsOperator = stack.lastElement().isOperator();
+                    lastElementPrecedence = Operators.getInstance().getPrecedence(stack.lastElement().getRawOp());
+                }
+            }
+        }
+
+        System.out.println("Operator in Stack: " + token);
+        stack.add(token);
     }
 }
