@@ -69,4 +69,9 @@ public class Operators
     {
         return precedences.get(literal);
     }
+    
+    public Class<? extends Operator> getOperatorClass(String literal)
+    {
+        return classTypes.get(literal);
+    }
 }

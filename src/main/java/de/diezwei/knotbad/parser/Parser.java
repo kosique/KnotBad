@@ -5,20 +5,21 @@ import static java.lang.Math.abs;
 import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
+import de.diezwei.knotbad.knot.Knot;
 import de.diezwei.knotbad.knot.Operators;
+import de.diezwei.knotbad.knot.Value;
 import de.diezwei.knotbad.parser.token.AssocType;
-import de.diezwei.knotbad.parser.token.OperatorToken;
-import de.diezwei.knotbad.parser.token.Token;
-import de.diezwei.knotbad.parser.token.ValueToken;
 
 public class Parser
 {
-    private final Stack<Token> stack = new Stack<>();
-    private final List<Token> output = new ArrayList<>();
+    private final Stack<Knot> stack = new Stack<>();
+    private final List<Knot> output = new ArrayList<>();
 
     void buildSyntaxTree(String input) throws IOException
     {
@@ -62,7 +63,7 @@ public class Parser
         }
 
         System.out.println("Ergebnis: ");
-        for (final Token token : output)
+        for (final Knot token : output)
         {
             System.out.println(token);
         }
@@ -70,27 +71,36 @@ public class Parser
 
     private boolean processValue(double value)
     {
-        return output.add(new ValueToken(value));
+        return output.add(new Value(value));
     }
 
     private void processOperator(String operatorLiteral)
     {
-        final Token token = new OperatorToken(operatorLiteral);
         final Operators operators = Operators.getInstance();
 
+        Knot operator;
+        try
+        {
+            operator = operators.getOperatorClass(operatorLiteral).newInstance();
+        }
+        catch (InstantiationException | IllegalAccessException e)
+        {
+            throw new UnexpectedKnotBadException(MessageFormat.format("Cannot instantiate operator for literal {0}", operatorLiteral));
+        }
+        
         if (!stack.empty())
         {
 
             final int tokenPrecedence = operators.getPrecedence(operatorLiteral);
 
-            while (!stack.empty() && isOperatorOnStack()
+            while (!stack.empty() 
                     && (((getStackAssocType() == AssocType.LEFT) && (getStackPrecedence() >= tokenPrecedence)) || (getStackPrecedence() > tokenPrecedence)))
             {
                 output.add(stack.pop());
             }
         }
 
-        stack.add(token);
+        stack.add(operator);
     }
 
     private int getStackPrecedence()
@@ -103,10 +113,5 @@ public class Parser
     {
         final String literal = stack.lastElement().getLiteral();
         return Operators.getInstance().getAssocType(literal);
-    }
-
-    private boolean isOperatorOnStack()
-    {
-        return stack.lastElement().isOperator();
     }
 }

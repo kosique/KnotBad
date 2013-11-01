@@ -1,5 +1,7 @@
 package de.diezwei.knotbad.knot;
 
+import de.diezwei.knotbad.parser.token.AssocType;
+
 public class Value extends Knot
 {
 	private final double value;
@@ -19,4 +21,22 @@ public class Value extends Knot
 	{
 		return value;
 	}
+
+    @Override
+    public String getLiteral()
+    {
+        return String.valueOf(value);
+    }
+
+    @Override
+    public AssocType getAssocType()
+    {
+        return AssocType.NONE;
+    }
+
+    @Override
+    public int getPrecedence()
+    {
+        return 0;
+    }
 }

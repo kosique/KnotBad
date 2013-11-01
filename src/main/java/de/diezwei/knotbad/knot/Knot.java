@@ -5,6 +5,8 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
+import de.diezwei.knotbad.parser.token.AssocType;
+
 public abstract class Knot
 {
 	public abstract double resolve();
@@ -26,4 +28,10 @@ public abstract class Knot
 	{
 		return EqualsBuilder.reflectionEquals(this, obj);
 	}
+
+    public abstract String getLiteral();
+    
+    public abstract AssocType getAssocType();
+
+    public abstract int getPrecedence();
 }
