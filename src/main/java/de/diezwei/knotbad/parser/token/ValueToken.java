@@ -30,7 +30,7 @@ public class ValueToken extends Token
     }
 
     @Override
-    public String getRawOp()
+    public String getLiteral()
     {
         throw new UnexpectedKnotBadException("Getting precedence on value token is nonsense");
     }

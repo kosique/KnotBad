@@ -17,7 +17,7 @@ public abstract class Token
 
     public abstract int getPrecedence();
     
-    public abstract String getRawOp();
+    public abstract String getLiteral();
     
 
     @Override

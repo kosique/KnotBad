@@ -6,11 +6,11 @@ import de.diezwei.knotbad.knot.Operator;
 public class OperatorToken extends Token
 {
     private Operator knot;
-    private final char rawOp; 
+    private final String literal; 
 
-    public OperatorToken(char ttype)
+    public OperatorToken(String literal)
     {
-        this.rawOp = ttype;
+        this.literal = literal;
     }
 
     @Override
@@ -32,9 +32,9 @@ public class OperatorToken extends Token
     }
 
     @Override
-    public String getRawOp()
+    public String getLiteral()
     {
-        return String.valueOf(rawOp);
+        return literal;
     }
     
     
