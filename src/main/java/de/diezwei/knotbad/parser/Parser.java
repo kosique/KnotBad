@@ -5,23 +5,19 @@ import static java.lang.Math.abs;
 import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
-import de.diezwei.knotbad.knot.Knot;
 import de.diezwei.knotbad.knot.Operators;
-import de.diezwei.knotbad.knot.Value;
 import de.diezwei.knotbad.parser.token.AssocType;
 
 public class Parser
 {
-    private final Stack<Knot> stack = new Stack<>();
-    private final List<Knot> output = new ArrayList<>();
+    private final Stack<String> stack = new Stack<>();
+    private final List<String> output = new ArrayList<>();
 
-    void buildSyntaxTree(String input) throws IOException
+    List<String> toPostfix(String input) throws IOException
     {
         final StreamTokenizer tokenizer = new StreamTokenizer(new StringReader(input));
 
@@ -61,32 +57,20 @@ public class Parser
         {
             output.add(stack.pop());
         }
-
-        System.out.println("Ergebnis: ");
-        for (final Knot token : output)
-        {
-            System.out.println(token);
-        }
+        
+        return output;
     }
 
     private boolean processValue(double value)
     {
-        return output.add(new Value(value));
+        return output.add(String.valueOf(value));
     }
 
     private void processOperator(String operatorLiteral)
     {
         final Operators operators = Operators.getInstance();
 
-        Knot operator;
-        try
-        {
-            operator = operators.getOperatorClass(operatorLiteral).newInstance();
-        }
-        catch (InstantiationException | IllegalAccessException e)
-        {
-            throw new UnexpectedKnotBadException(MessageFormat.format("Cannot instantiate operator for literal {0}", operatorLiteral));
-        }
+        final String operator = operatorLiteral;
         
         if (!stack.empty())
         {
@@ -105,13 +89,18 @@ public class Parser
 
     private int getStackPrecedence()
     {
-        final String literal = stack.lastElement().getLiteral();
+        final String literal = stack.lastElement();
         return Operators.getInstance().getPrecedence(literal);
     }
 
     private AssocType getStackAssocType()
     {
-        final String literal = stack.lastElement().getLiteral();
+        final String literal = stack.lastElement();
         return Operators.getInstance().getAssocType(literal);
+    }
+
+    public List<String> getOutput()
+    {
+        return output;
     }
 }
