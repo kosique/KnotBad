@@ -1,0 +1,118 @@
+package de.diezwei.knotbad.tokenizer;
+
+import java.io.IOException;
+import java.io.StreamTokenizer;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import de.diezwei.knotbad.Tokenizer;
+import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
+
+public class SimpleTokenizer implements Tokenizer, Iterable<Token>
+{
+
+    private final String input;
+
+    static class SimpleTokenizerIterator implements Iterator<Token>
+    {
+
+        final StreamTokenizer tokenizer;
+        private final List<Token> preParsedTokens = new ArrayList<>();
+        private Token lastToken;
+
+        public SimpleTokenizerIterator(String input)
+        {
+            super();
+            tokenizer = new StreamTokenizer(new StringReader(input));
+            tokenizer.ordinaryChar('/');
+        }
+
+        @Override
+        public boolean hasNext()
+        {
+            return (lastToken == null) || (lastToken.getType() != TokenType.STREAM_END);
+        }
+
+        @Override
+        public Token next()
+        {
+            int type;
+
+            if (preParsedTokens.size() == 0)
+            {
+                try
+                {
+                    type = tokenizer.nextToken();
+                }
+                catch (final IOException e)
+                {
+                    throw new UnexpectedKnotBadException("Error while tokenizing", e);
+                }
+                switch (type)
+                {
+                case StreamTokenizer.TT_EOF:
+
+                    this.preParsedTokens.add(Token.streamEndToken());
+                    break;
+
+                case StreamTokenizer.TT_EOL:
+
+                    this.preParsedTokens.add(Token.lineEndToken());
+                    break;
+
+                case StreamTokenizer.TT_NUMBER:
+
+                    final double rawValue = tokenizer.nval;
+                    
+                    if (rawValue < 0)
+                    {
+                        this.preParsedTokens.add(Token.operatorToken("-"));
+                    }
+                    
+                    final String value = String.valueOf(Math.abs(rawValue));
+                    this.preParsedTokens.add(Token.numberToken(value));
+                    break;
+
+                case StreamTokenizer.TT_WORD:
+
+                    final String word = String.valueOf((char) tokenizer.ttype);
+                    this.preParsedTokens.add(Token.unknownToken(word));
+                    break;
+
+                default:
+
+                    final String operator = String.valueOf((char) tokenizer.ttype);
+                    this.preParsedTokens.add(Token.operatorToken(operator));
+                    break;
+                }
+            }
+
+            lastToken =  preParsedTokens.remove(0);
+            
+            return lastToken;
+        }
+
+        @Override
+        public void remove()
+        {
+            // TODO Auto-generated method stub
+
+        }
+
+    }
+
+    public SimpleTokenizer(String input)
+    {
+        super();
+        this.input = input;
+    }
+
+    @Override
+    public Iterator<Token> iterator()
+    {
+        return new SimpleTokenizerIterator(input);
+    }
+
+}
