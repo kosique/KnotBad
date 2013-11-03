@@ -44,7 +44,6 @@ public class SimpleTokenizerTest
     @Test
     public void testDivision()
     {
-        System.out.println("Division");
         final SimpleTokenizer simpleTokenizer = new SimpleTokenizer("1/2");
         
         final List<String> tokens = toLiteralList(simpleTokenizer);
@@ -60,6 +59,16 @@ public class SimpleTokenizerTest
         final List<String> tokens = toLiteralList(simpleTokenizer);
         
         assertThat(tokens, contains("1.0", "-", "2.0", "*", "3.0", "/", "4.0", ""));
+    }
+    
+    @Test
+    public void testWhitespaces() throws Exception
+    {
+        final SimpleTokenizer simpleTokenizer = new SimpleTokenizer(" 1 + 2 ");
+        
+        final List<String> tokens = toLiteralList(simpleTokenizer);
+        
+        assertThat(tokens, contains("1.0", "+", "2.0", ""));
     }
     
     private List<String> toLiteralList(final SimpleTokenizer simpleTokenizer)
