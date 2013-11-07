@@ -1,10 +1,10 @@
 package de.diezwei.knotbad.operator;
 
 import de.diezwei.knotbad.knot.Knot;
-import de.diezwei.knotbad.knot.UnaryKnot;
+import de.diezwei.knotbad.knot.Unary;
 import de.diezwei.knotbad.parser.token.AssocType;
 
-public class SquareRoot extends UnaryKnot
+public class SquareRoot extends Unary
 {
 	public SquareRoot()
     {

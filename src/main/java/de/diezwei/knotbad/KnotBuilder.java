@@ -3,9 +3,9 @@ package de.diezwei.knotbad;
 import java.text.MessageFormat;
 
 import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
-import de.diezwei.knotbad.knot.BinaryKnot;
+import de.diezwei.knotbad.knot.Binary;
 import de.diezwei.knotbad.knot.Knot;
-import de.diezwei.knotbad.knot.UnaryKnot;
+import de.diezwei.knotbad.knot.Unary;
 import de.diezwei.knotbad.knot.Value;
 import de.diezwei.knotbad.operator.Addition;
 import de.diezwei.knotbad.operator.Division;
@@ -32,7 +32,7 @@ public class KnotBuilder
 		this.knot = builder.getKnot();
 	}
 
-	public KnotBuilder knot(Class<? extends UnaryKnot> type)
+	public KnotBuilder knot(Class<? extends Unary> type)
 	{
 		try
 		{
@@ -49,7 +49,7 @@ public class KnotBuilder
 		}
 	}
 
-	public KnotBuilder knot(Class<? extends BinaryKnot> type, int value)
+	public KnotBuilder knot(Class<? extends Binary> type, int value)
 	{
 		try
 		{
@@ -66,7 +66,7 @@ public class KnotBuilder
 		}
 	}
 
-	public KnotBuilder(Class<? extends BinaryKnot> type, KnotBuilder builder)
+	public KnotBuilder(Class<? extends Binary> type, KnotBuilder builder)
 	{
 		try
 		{

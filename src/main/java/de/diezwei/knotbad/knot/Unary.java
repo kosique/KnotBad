@@ -1,16 +1,16 @@
 package de.diezwei.knotbad.knot;
 
-public abstract class UnaryKnot extends Operator
+public abstract class Unary extends Operator
 {
 	private final Knot child1;
 
-	public UnaryKnot(Knot child1)
+	public Unary(Knot child1)
 	{
 		super();
 		this.child1 = child1;
 	}
 
-	public UnaryKnot()
+	public Unary()
     {
         this(new NoOp());
     }

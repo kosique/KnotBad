@@ -1,10 +1,10 @@
 package de.diezwei.knotbad.operator;
 
-import de.diezwei.knotbad.knot.BinaryKnot;
+import de.diezwei.knotbad.knot.Binary;
 import de.diezwei.knotbad.knot.Knot;
 import de.diezwei.knotbad.parser.token.AssocType;
 
-public class Addition extends BinaryKnot
+public class Addition extends Binary
 {
     public Addition()
     {

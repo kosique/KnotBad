@@ -1,10 +1,10 @@
 package de.diezwei.knotbad.operator;
 
-import de.diezwei.knotbad.knot.BinaryKnot;
+import de.diezwei.knotbad.knot.Binary;
 import de.diezwei.knotbad.knot.Knot;
 import de.diezwei.knotbad.parser.token.AssocType;
 
-public class Division extends BinaryKnot
+public class Division extends Binary
 {
     public Division()
     {
