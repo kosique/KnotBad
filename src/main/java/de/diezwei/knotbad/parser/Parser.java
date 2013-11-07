@@ -1,106 +1,127 @@
 package de.diezwei.knotbad.parser;
 
-import static java.lang.Math.abs;
-
 import java.io.IOException;
-import java.io.StreamTokenizer;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import de.diezwei.knotbad.Tokenizer;
+import de.diezwei.knotbad.knot.BinaryKnot;
+import de.diezwei.knotbad.knot.Knot;
 import de.diezwei.knotbad.knot.Operators;
 import de.diezwei.knotbad.parser.token.AssocType;
+import de.diezwei.knotbad.tokenizer.SimpleTokenizer;
+import de.diezwei.knotbad.tokenizer.Token;
+import de.diezwei.knotbad.tokenizer.TokenType;
 
 public class Parser
 {
-    private final Stack<String> stack = new Stack<>();
-    private final List<String> output = new ArrayList<>();
+	private final Stack<Token> stack = new Stack<>();
+	private final List<Token> output = new ArrayList<>();
 
-    List<String> toPostfix(String input) throws IOException
-    {
-        final StreamTokenizer tokenizer = new StreamTokenizer(new StringReader(input));
+	public Knot parse(String input)
+	{
+		List<Token> postfix;
 
-        for (int tval; (tval = tokenizer.nextToken()) != StreamTokenizer.TT_EOF;)
-        {
-            switch (tval)
-            {
-            case StreamTokenizer.TT_NUMBER:
+		try
+		{
+			postfix = toPostfix(input);
+		}
+		catch (final IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 
-                if (tokenizer.nval < 0)
-                {
-                    processOperator("-");
-                }
+		final Knot result = null;
 
-                processValue(abs(tokenizer.nval));
+		for (final Token token : postfix)
+		{
+			if (token.getType() == TokenType.OPERATOR_TOKEN)
+			{
+				if (BinaryKnot.class.isAssignableFrom(Operators.getInstance().getOperatorClass(token.getLiteral())))
+				{
 
-                break;
+				}
+			}
+		}
 
-            case StreamTokenizer.TT_WORD:
+		return result;
 
-                break;
+	}
 
-            case StreamTokenizer.TT_EOL:
+	List<Token> toPostfix(String input) throws IOException
+	{
+		final Tokenizer tokenizer = new SimpleTokenizer(input);
+		for (final Token token : tokenizer)
+		{
+			switch (token.getType())
+			{
+			case LINE_END:
+			case STREAM_END:
+			case UNKNOWN:
 
-                break;
+				break;
 
-            default:
+			case NUMBER:
 
-                final String literal = String.valueOf((char) tokenizer.ttype);
+				processValue(token);
 
-                processOperator(literal);
+				break;
+			case OPERATOR_TOKEN:
 
-            }
-        }
+				processOperator(token);
 
-        while (!stack.isEmpty())
-        {
-            output.add(stack.pop());
-        }
-        
-        return output;
-    }
+				break;
+			}
+		}
 
-    private boolean processValue(double value)
-    {
-        return output.add(String.valueOf(value));
-    }
+		while (!stack.isEmpty())
+		{
+			output.add(stack.pop());
+		}
 
-    private void processOperator(String operatorLiteral)
-    {
-        final Operators operators = Operators.getInstance();
+		return output;
+	}
 
-        final String operator = operatorLiteral;
-        
-        if (!stack.empty())
-        {
+	private boolean processValue(Token value)
+	{
+		return output.add(value);
+	}
 
-            final int tokenPrecedence = operators.getPrecedence(operatorLiteral);
+	private void processOperator(Token token)
+	{
+		final Operators operators = Operators.getInstance();
 
-            while (!stack.empty() 
-                    && (((getStackAssocType() == AssocType.LEFT) && (getStackPrecedence() >= tokenPrecedence)) || (getStackPrecedence() > tokenPrecedence)))
-            {
-                output.add(stack.pop());
-            }
-        }
+		final String literal = token.getLiteral();
 
-        stack.add(operator);
-    }
+		if (!stack.empty())
+		{
 
-    private int getStackPrecedence()
-    {
-        final String literal = stack.lastElement();
-        return Operators.getInstance().getPrecedence(literal);
-    }
+			final int tokenPrecedence = operators.getPrecedence(literal);
 
-    private AssocType getStackAssocType()
-    {
-        final String literal = stack.lastElement();
-        return Operators.getInstance().getAssocType(literal);
-    }
+			while (!stack.empty()
+					&& (((getStackAssocType() == AssocType.LEFT) && (getStackPrecedence() >= tokenPrecedence)) || (getStackPrecedence() > tokenPrecedence)))
+			{
+				output.add(stack.pop());
+			}
+		}
 
-    public List<String> getOutput()
-    {
-        return output;
-    }
+		stack.add(token);
+	}
+
+	private int getStackPrecedence()
+	{
+		return Operators.getInstance().getPrecedence(stack.lastElement().getLiteral());
+	}
+
+	private AssocType getStackAssocType()
+	{
+		return Operators.getInstance().getAssocType(stack.lastElement().getLiteral());
+	}
+
+	public List<Token> getOutput()
+	{
+		return output;
+	}
 }
