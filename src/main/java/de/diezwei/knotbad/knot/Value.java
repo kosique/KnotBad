@@ -2,7 +2,7 @@ package de.diezwei.knotbad.knot;
 
 import de.diezwei.knotbad.parser.token.AssocType;
 
-public class Value extends Knot
+public class Value extends Node
 {
 	private final double value;
 

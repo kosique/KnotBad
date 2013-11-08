@@ -1,7 +1,7 @@
 package de.diezwei.knotbad.operator;
 
 import de.diezwei.knotbad.knot.Binary;
-import de.diezwei.knotbad.knot.Knot;
+import de.diezwei.knotbad.knot.Node;
 import de.diezwei.knotbad.parser.token.AssocType;
 
 public class Subtraction extends Binary
@@ -12,7 +12,7 @@ public class Subtraction extends Binary
         super();
     }
 
-    public Subtraction(Knot child1, Knot child2)
+    public Subtraction(Node child1, Node child2)
 	{
 		super(child1, child2);
 	}
@@ -20,7 +20,7 @@ public class Subtraction extends Binary
 	@Override
 	public double resolve()
 	{
-		return getChild1().resolve() - getChild2().resolve();
+		return getLeftArgument().resolve() - getRightArgument().resolve();
 	}
 
     @Override

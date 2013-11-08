@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 
 import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
 import de.diezwei.knotbad.knot.Binary;
-import de.diezwei.knotbad.knot.Knot;
+import de.diezwei.knotbad.knot.Node;
 import de.diezwei.knotbad.knot.Unary;
 import de.diezwei.knotbad.knot.Value;
 import de.diezwei.knotbad.operator.Addition;
@@ -15,7 +15,7 @@ import de.diezwei.knotbad.operator.Subtraction;
 
 public class KnotBuilder
 {
-	private Knot knot;
+	private Node knot;
 
 	public KnotBuilder(int value)
 	{
@@ -38,7 +38,7 @@ public class KnotBuilder
 		{
 			if (type != null)
 			{
-				this.knot = type.getConstructor(Knot.class).newInstance(this.knot);
+				this.knot = type.getConstructor(Node.class).newInstance(this.knot);
 			}
 
 			return this;
@@ -55,7 +55,7 @@ public class KnotBuilder
 		{
 			if (type != null)
 			{
-				this.knot = type.getConstructor(Knot.class).newInstance(this.knot, new Value(value));
+				this.knot = type.getConstructor(Node.class).newInstance(this.knot, new Value(value));
 			}
 
 			return this;
@@ -72,7 +72,7 @@ public class KnotBuilder
 		{
 			if (type != null)
 			{
-				this.knot = type.getConstructor(Knot.class).newInstance(this.knot, builder.getKnot());
+				this.knot = type.getConstructor(Node.class).newInstance(this.knot, builder.getKnot());
 			}
 		}
 		catch (final ReflectiveOperationException e)
@@ -81,7 +81,7 @@ public class KnotBuilder
 		}
 	}
 
-	public Knot getKnot()
+	public Node getKnot()
 	{
 		return this.knot;
 	}

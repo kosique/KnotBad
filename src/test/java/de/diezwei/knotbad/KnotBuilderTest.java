@@ -5,7 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.Test;
 
-import de.diezwei.knotbad.knot.Knot;
+import de.diezwei.knotbad.knot.Node;
 import de.diezwei.knotbad.operator.Factorial;
 
 public class KnotBuilderTest
@@ -13,7 +13,7 @@ public class KnotBuilderTest
 	@Test
 	public void testInitBuilder() throws Exception
 	{
-		final Knot knot = new KnotBuilder(10).getKnot();
+		final Node knot = new KnotBuilder(10).getKnot();
 
 		assertThat(knot.resolve(), equalTo(10.0));
 	}
@@ -21,7 +21,7 @@ public class KnotBuilderTest
 	@Test
 	public void testAdditionOfTwoValues() throws Exception
 	{
-		final Knot knot = new KnotBuilder(10)
+		final Node knot = new KnotBuilder(10)
 				.plus(5)
 				.getKnot();
 
@@ -31,7 +31,7 @@ public class KnotBuilderTest
 	@Test
 	public void testAdditionOfThreeValues() throws Exception
 	{
-		final Knot knot = new KnotBuilder(1)
+		final Node knot = new KnotBuilder(1)
 				.plus(2)
 				.plus(3)
 				.getKnot();
@@ -42,7 +42,7 @@ public class KnotBuilderTest
 	@Test
 	public void testSubstractionOfThreeValues() throws Exception
 	{
-		final Knot knot = new KnotBuilder(10.0)
+		final Node knot = new KnotBuilder(10.0)
 				.minus(1)
 				.minus(2)
 				.getKnot();
@@ -53,7 +53,7 @@ public class KnotBuilderTest
 	@Test
 	public void testMixingAdditionAndSubstraction() throws Exception
 	{
-		final Knot knot = new KnotBuilder(10.0)
+		final Node knot = new KnotBuilder(10.0)
 				.minus(1)
 				.plus(2)
 				.getKnot();
@@ -64,7 +64,7 @@ public class KnotBuilderTest
 	@Test
 	public void testMultiplication() throws Exception
 	{
-		final Knot knot = new KnotBuilder(10.0)
+		final Node knot = new KnotBuilder(10.0)
 				.multiply(3)
 				.getKnot();
 
@@ -74,7 +74,7 @@ public class KnotBuilderTest
 	@Test
 	public void testDivision() throws Exception
 	{
-		final Knot knot = new KnotBuilder(10)
+		final Node knot = new KnotBuilder(10)
 				.divide(4)
 				.getKnot();
 
@@ -84,7 +84,7 @@ public class KnotBuilderTest
 	@Test
 	public void testMixingAllOperations() throws Exception
 	{
-		final Knot knot = new KnotBuilder(10)
+		final Node knot = new KnotBuilder(10)
 				.multiply(2)
 				.plus(1)
 				.divide(7)
@@ -99,7 +99,7 @@ public class KnotBuilderTest
 		final KnotBuilder builder = new KnotBuilder(100)
 				.plus(20);
 
-		final Knot tree = new KnotBuilder(5.0)
+		final Node tree = new KnotBuilder(5.0)
 				.plus(builder)
 				.getKnot();
 
@@ -115,7 +115,7 @@ public class KnotBuilderTest
 		final KnotBuilder builder2 = new KnotBuilder(3)
 				.minus(1);
 
-		final Knot tree = new KnotBuilder(builder1)
+		final Node tree = new KnotBuilder(builder1)
 				.plus(builder2)
 				.getKnot();
 
@@ -128,7 +128,7 @@ public class KnotBuilderTest
 		final KnotBuilder builder = new KnotBuilder(100)
 				.plus(20);
 
-		final Knot tree = new KnotBuilder(5)
+		final Node tree = new KnotBuilder(5)
 				.multiply(builder)
 				.getKnot();
 
@@ -138,7 +138,7 @@ public class KnotBuilderTest
 	@Test
 	public void testFactorialOf1() throws Exception
 	{
-		final Knot knot = new KnotBuilder(1)
+		final Node knot = new KnotBuilder(1)
 				.factorial()
 				.getKnot();
 
@@ -148,7 +148,7 @@ public class KnotBuilderTest
 	@Test
 	public void testFactorialOf3() throws Exception
 	{
-		final Knot knot = new KnotBuilder(3)
+		final Node knot = new KnotBuilder(3)
 				.knot(Factorial.class)
 				.getKnot();
 
@@ -158,7 +158,7 @@ public class KnotBuilderTest
 	@Test
 	public void testFactorialOfKnot() throws Exception
 	{
-		final Knot knot = new KnotBuilder(2)
+		final Node knot = new KnotBuilder(2)
 				.plus(3)
 				.factorial()
 				.getKnot();

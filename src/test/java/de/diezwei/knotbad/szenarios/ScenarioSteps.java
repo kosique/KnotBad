@@ -37,5 +37,6 @@ public class ScenarioSteps
 	public void checkResult(@Named("result") int result)
 	{
 		System.out.println("Result should be " + result);
+		System.out.println("" + input + parser + this.result);
 	}
 }

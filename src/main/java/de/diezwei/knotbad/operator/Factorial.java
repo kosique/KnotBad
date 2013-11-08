@@ -1,6 +1,6 @@
 package de.diezwei.knotbad.operator;
 
-import de.diezwei.knotbad.knot.Knot;
+import de.diezwei.knotbad.knot.Node;
 import de.diezwei.knotbad.knot.Unary;
 import de.diezwei.knotbad.parser.token.AssocType;
 
@@ -11,7 +11,7 @@ public class Factorial extends Unary
         super();
     }
     
-	public Factorial(Knot child1)
+	public Factorial(Node child1)
 	{
 		super(child1);
 	}
@@ -19,7 +19,7 @@ public class Factorial extends Unary
 	@Override
 	public double resolve()
 	{
-		return factorialRecursive(getChild1().resolve());
+		return factorialRecursive(getArgument().resolve());
 	}
 
 	private double factorialRecursive(final double value)

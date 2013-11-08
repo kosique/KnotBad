@@ -7,7 +7,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 import de.diezwei.knotbad.parser.token.AssocType;
 
-public abstract class Knot
+public abstract class Node
 {
 	public abstract double resolve();
 

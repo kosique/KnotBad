@@ -1,6 +1,6 @@
 package de.diezwei.knotbad.operator;
 
-import de.diezwei.knotbad.knot.Knot;
+import de.diezwei.knotbad.knot.Node;
 import de.diezwei.knotbad.knot.Unary;
 import de.diezwei.knotbad.parser.token.AssocType;
 
@@ -11,7 +11,7 @@ public class SquareRoot extends Unary
         super();
     }
 
-    public SquareRoot(Knot child1)
+    public SquareRoot(Node child1)
 	{
 		super(child1);
 	}
@@ -19,7 +19,7 @@ public class SquareRoot extends Unary
 	@Override
 	public double resolve()
 	{
-		return Math.sqrt(getChild1().resolve());
+		return Math.sqrt(getArgument().resolve());
 	}
 	
 	   

@@ -4,7 +4,7 @@ import org.apache.commons.lang.NotImplementedException;
 
 import de.diezwei.knotbad.parser.token.AssocType;
 
-public class NoOp extends Knot
+public class NullNode extends Node
 {
     @Override
     public double resolve()

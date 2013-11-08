@@ -2,21 +2,32 @@ package de.diezwei.knotbad.knot;
 
 public abstract class Unary extends Operator
 {
-	private final Knot child1;
+	private Node argument;
 
-	public Unary(Knot child1)
+	public Unary(Node argument)
 	{
 		super();
-		this.child1 = child1;
+		this.argument = argument;
 	}
 
 	public Unary()
     {
-        this(new NoOp());
+        this(new NullNode());
     }
 
-    public Knot getChild1()
+    public Node getArgument()
 	{
-		return child1;
+		return argument;
 	}
+    
+    public void setArgument(Node argument)
+    {
+        this.argument = argument;
+    }
+
+    @Override
+    public int getArity()
+    {
+        return 1; 
+    }
 }

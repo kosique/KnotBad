@@ -9,6 +9,7 @@ import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 
 import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
 import de.diezwei.knotbad.parser.token.AssocType;
@@ -29,9 +30,11 @@ public class Operators
                 new ConfigurationBuilder()
                         .setScanners(new SubTypesScanner())
                         .setUrls(ClasspathHelper.forPackage("de.diezwei.knotbad.operator"))
+                        .filterInputsBy(new FilterBuilder().exclude(NullOperator.class.getName() + ".class"))
                 );
 
         final Set<Class<? extends Operator>> operatorTypes = reflections.getSubTypesOf(Operator.class);
+
         for (final Class<? extends Operator> operatorType : operatorTypes)
         {
             try
@@ -69,7 +72,7 @@ public class Operators
     {
         return precedences.get(literal);
     }
-    
+
     public Class<? extends Operator> getOperatorClass(String literal)
     {
         return classTypes.get(literal);

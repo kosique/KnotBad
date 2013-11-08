@@ -4,16 +4,12 @@ import static de.diezwei.knotbad.tokenizer.Token.numberToken;
 import static de.diezwei.knotbad.tokenizer.Token.operatorToken;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 import java.util.List;
 
 import org.junit.Test;
 
-import de.diezwei.knotbad.knot.Knot;
-import de.diezwei.knotbad.knot.Value;
-import de.diezwei.knotbad.operator.Addition;
 import de.diezwei.knotbad.tokenizer.Token;
 
 public class ParserTest
@@ -59,15 +55,4 @@ public class ParserTest
 						numberToken("5.0"), operatorToken("*"), operatorToken("-"), numberToken("6.0"), operatorToken("+")));
 	}
 
-	@Test
-	public void parseValue()
-	{
-		final Parser parser = new Parser();
-
-		//		assertThat(parser.parse("1"), equalTo((Knot) new Value(1)));
-		//		assertThat(parser.parse("5"), equalTo((Knot) new Value(5)));
-
-		final Knot addition = new Addition(new Value(1), new Value(2));
-		assertThat(parser.parse("1+1"), equalTo(addition));
-	}
 }

@@ -2,28 +2,44 @@ package de.diezwei.knotbad.knot;
 
 public abstract class Binary extends Operator
 {
-	private final Knot child2;
-    private final Knot child1;
+	private  Node rightArgument;
+    private  Node leftArgument;
 
-	public Binary(Knot child1, Knot child2)
+	public Binary(Node leftArgument, Node rightArgument)
 	{
 		super();
-		this.child1 = child1;
-		this.child2 = child2;
+		this.leftArgument = leftArgument;
+		this.rightArgument = rightArgument;
 	}
 
 	public Binary()
     {
-	    this(new NoOp(), new NoOp());
+	    this(new NullNode(), new NullNode());
     }
 	
-    public Knot getChild1()
+    public Node getLeftArgument()
     {
-        return child1;
+        return leftArgument;
     }
 
-    public Knot getChild2()
-	{
-		return child2;
-	}
+    public void setLeftArgument(Node leftArgument)
+    {
+        this.leftArgument = leftArgument;
+    }
+
+    public Node getRightArgument()
+    {
+    	return rightArgument;
+    }
+
+    public void setRightArgument(Node rightArgument)
+    {
+        this.rightArgument = rightArgument;
+    }
+
+    @Override
+    public int getArity()
+    {
+        return 2; 
+    }
 }
