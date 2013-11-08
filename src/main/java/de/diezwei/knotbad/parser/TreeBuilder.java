@@ -7,10 +7,10 @@ import java.util.Stack;
 
 import de.diezwei.knotbad.NodeFactory;
 import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
-import de.diezwei.knotbad.knot.Binary;
-import de.diezwei.knotbad.knot.Node;
-import de.diezwei.knotbad.knot.Operator;
-import de.diezwei.knotbad.knot.Unary;
+import de.diezwei.knotbad.node.Binary;
+import de.diezwei.knotbad.node.Node;
+import de.diezwei.knotbad.node.Operator;
+import de.diezwei.knotbad.node.Unary;
 import de.diezwei.knotbad.tokenizer.Token;
 
 public class TreeBuilder

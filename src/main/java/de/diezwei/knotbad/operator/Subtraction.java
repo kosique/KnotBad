@@ -1,7 +1,7 @@
 package de.diezwei.knotbad.operator;
 
-import de.diezwei.knotbad.knot.Binary;
-import de.diezwei.knotbad.knot.Node;
+import de.diezwei.knotbad.node.Binary;
+import de.diezwei.knotbad.node.Node;
 import de.diezwei.knotbad.parser.token.AssocType;
 
 public class Subtraction extends Binary

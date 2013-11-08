@@ -1,9 +1,9 @@
 package de.diezwei.knotbad.tokenizer;
 
 import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
-import de.diezwei.knotbad.knot.NullOperator;
-import de.diezwei.knotbad.knot.Operator;
-import de.diezwei.knotbad.knot.Operators;
+import de.diezwei.knotbad.node.NullOperator;
+import de.diezwei.knotbad.node.Operator;
+import de.diezwei.knotbad.node.Operators;
 
 public class Token
 {

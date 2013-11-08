@@ -1,7 +1,7 @@
 package de.diezwei.knotbad.operator;
 
-import de.diezwei.knotbad.knot.Node;
-import de.diezwei.knotbad.knot.Unary;
+import de.diezwei.knotbad.node.Node;
+import de.diezwei.knotbad.node.Unary;
 import de.diezwei.knotbad.parser.token.AssocType;
 
 public class SquareRoot extends Unary

@@ -3,36 +3,36 @@ package de.diezwei.knotbad;
 import java.text.MessageFormat;
 
 import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
-import de.diezwei.knotbad.knot.Binary;
-import de.diezwei.knotbad.knot.Node;
-import de.diezwei.knotbad.knot.Unary;
-import de.diezwei.knotbad.knot.Value;
+import de.diezwei.knotbad.node.Binary;
+import de.diezwei.knotbad.node.Node;
+import de.diezwei.knotbad.node.Unary;
+import de.diezwei.knotbad.node.Value;
 import de.diezwei.knotbad.operator.Addition;
 import de.diezwei.knotbad.operator.Division;
 import de.diezwei.knotbad.operator.Factorial;
 import de.diezwei.knotbad.operator.Multiplication;
 import de.diezwei.knotbad.operator.Subtraction;
 
-public class KnotBuilder
+public class NodeBuilder
 {
 	private Node knot;
 
-	public KnotBuilder(int value)
+	public NodeBuilder(int value)
 	{
 		this.knot = new Value(value);
 	}
 
-	public KnotBuilder(double value)
+	public NodeBuilder(double value)
 	{
 		this.knot = new Value(value);
 	}
 
-	public KnotBuilder(KnotBuilder builder)
+	public NodeBuilder(NodeBuilder builder)
 	{
 		this.knot = builder.getKnot();
 	}
 
-	public KnotBuilder knot(Class<? extends Unary> type)
+	public NodeBuilder knot(Class<? extends Unary> type)
 	{
 		try
 		{
@@ -49,7 +49,7 @@ public class KnotBuilder
 		}
 	}
 
-	public KnotBuilder knot(Class<? extends Binary> type, int value)
+	public NodeBuilder knot(Class<? extends Binary> type, int value)
 	{
 		try
 		{
@@ -66,7 +66,7 @@ public class KnotBuilder
 		}
 	}
 
-	public KnotBuilder(Class<? extends Binary> type, KnotBuilder builder)
+	public NodeBuilder(Class<? extends Binary> type, NodeBuilder builder)
 	{
 		try
 		{
@@ -86,63 +86,63 @@ public class KnotBuilder
 		return this.knot;
 	}
 
-	public KnotBuilder plus(double value)
+	public NodeBuilder plus(double value)
 	{
 		this.knot = new Addition(this.knot, new Value(value));
 
 		return this;
 	}
 
-	public KnotBuilder plus(KnotBuilder builder)
+	public NodeBuilder plus(NodeBuilder builder)
 	{
 		this.knot = new Addition(this.knot, builder.getKnot());
 
 		return this;
 	}
 
-	public KnotBuilder minus(double value)
+	public NodeBuilder minus(double value)
 	{
 		this.knot = new Subtraction(this.knot, new Value(value));
 
 		return this;
 	}
 
-	public KnotBuilder minus(KnotBuilder builder)
+	public NodeBuilder minus(NodeBuilder builder)
 	{
 		this.knot = new Subtraction(this.knot, builder.getKnot());
 
 		return this;
 	}
 
-	public KnotBuilder multiply(double value)
+	public NodeBuilder multiply(double value)
 	{
 		this.knot = new Multiplication(this.knot, new Value(value));
 
 		return this;
 	}
 
-	public KnotBuilder multiply(KnotBuilder builder)
+	public NodeBuilder multiply(NodeBuilder builder)
 	{
 		this.knot = new Multiplication(this.knot, builder.getKnot());
 
 		return this;
 	}
 
-	public KnotBuilder divide(double value)
+	public NodeBuilder divide(double value)
 	{
 		this.knot = new Division(this.knot, new Value(value));
 
 		return this;
 	}
 
-	public KnotBuilder divide(KnotBuilder builder)
+	public NodeBuilder divide(NodeBuilder builder)
 	{
 		this.knot = new Division(this.knot, builder.getKnot());
 
 		return this;
 	}
 
-	public KnotBuilder factorial()
+	public NodeBuilder factorial()
 	{
 		this.knot = new Factorial(this.knot);
 

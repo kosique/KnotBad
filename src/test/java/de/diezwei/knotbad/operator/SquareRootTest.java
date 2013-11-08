@@ -5,7 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import de.diezwei.knotbad.knot.Value;
+import de.diezwei.knotbad.node.Value;
 
 public class SquareRootTest
 {

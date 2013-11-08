@@ -1,4 +1,4 @@
-package de.diezwei.knotbad.knot;
+package de.diezwei.knotbad.node;
 
 public abstract class Unary extends Operator
 {

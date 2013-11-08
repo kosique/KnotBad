@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Stack;
 
 import de.diezwei.knotbad.Tokenizer;
-import de.diezwei.knotbad.knot.Node;
-import de.diezwei.knotbad.knot.Operators;
+import de.diezwei.knotbad.node.Node;
+import de.diezwei.knotbad.node.Operators;
 import de.diezwei.knotbad.parser.token.AssocType;
 import de.diezwei.knotbad.tokenizer.SimpleTokenizer;
 import de.diezwei.knotbad.tokenizer.Token;

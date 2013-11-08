@@ -1,4 +1,4 @@
-package de.diezwei.knotbad.knot;
+package de.diezwei.knotbad.node;
 
 import java.lang.reflect.Modifier;
 import java.util.HashMap;

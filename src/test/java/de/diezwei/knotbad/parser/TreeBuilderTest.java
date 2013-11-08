@@ -10,8 +10,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.diezwei.knotbad.knot.Node;
-import de.diezwei.knotbad.knot.Value;
+import de.diezwei.knotbad.node.Node;
+import de.diezwei.knotbad.node.Value;
 import de.diezwei.knotbad.operator.Addition;
 import de.diezwei.knotbad.operator.Factorial;
 import de.diezwei.knotbad.operator.Multiplication;

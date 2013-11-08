@@ -1,4 +1,4 @@
-package de.diezwei.knotbad.knot;
+package de.diezwei.knotbad.node;
 
 import de.diezwei.knotbad.parser.token.AssocType;
 
