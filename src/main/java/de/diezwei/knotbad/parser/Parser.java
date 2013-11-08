@@ -19,6 +19,7 @@ public class Parser
 
     public Node parse(String input)
     {
+        // TODO: Refactor - ugly as hell
         List<Token> postfix;
 
         try
@@ -31,11 +32,8 @@ public class Parser
             return null;
         }
 
-        final Node result = null;
-
-   
-        return result;
-
+        final TreeBuilder treeBuilder = new TreeBuilder();
+        return treeBuilder.toNode(postfix);
     }
 
     List<Token> toPostfix(String input) throws IOException

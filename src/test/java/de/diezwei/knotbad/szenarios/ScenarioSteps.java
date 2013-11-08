@@ -1,42 +1,27 @@
 package de.diezwei.knotbad.szenarios;
 
-import java.util.List;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
-import org.jbehave.core.annotations.When;
 
-import de.diezwei.knotbad.parser.Parser;
+import de.diezwei.knotbad.Solver;
 
 public class ScenarioSteps
 {
-	private String input;
-	private Parser parser;
-	private List<String> result;
+    private Solver solver;
 
-	@Given("a new parser instance")
-	public void inputString()
-	{
-		this.parser = new Parser();
-	}
+    @Given("an input reading $input")
+    public void inputString(@Named("input") String input)
+    {
+        this.solver = new Solver(input);
+    }
 
-	@When("the input reads $input")
-	public void input(@Named("input") String input)
-	{
-		this.input = input;
-	}
-
-	@When("the user runs the parser")
-	public void parse()
-	{
-		//		this.result = this.parser.parse(input);
-	}
-
-	@Then("the computed result should be $result")
-	public void checkResult(@Named("result") int result)
-	{
-		System.out.println("Result should be " + result);
-		System.out.println("" + input + parser + this.result);
-	}
+    @Then("the solver calculates an result of $result")
+    public void checkResult(@Named("result") double result)
+    {
+        assertThat(solver.solve(), equalTo(result));
+    }
 }

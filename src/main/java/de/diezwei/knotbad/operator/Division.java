@@ -10,18 +10,17 @@ public class Division extends Binary
     {
         super();
     }
-    
-	public Division(Node child1, Node child2)
-	{
-		super(child1, child2);
-	}
 
-	@Override
-	public double resolve()
-	{
-		return getLeftArgument().resolve() / getRightArgument().resolve();
-	}
-	
+    public Division(Node child1, Node child2)
+    {
+        super(child1, child2);
+    }
+
+    @Override
+    public double resolve()
+    {
+        return getLeftArgument().resolve() / getRightArgument().resolve();
+    }
 
     @Override
     public AssocType getAssocType()
@@ -32,9 +31,8 @@ public class Division extends Binary
     @Override
     public int getPrecedence()
     {
-        return 15;
+        return 20;
     }
-    
 
     @Override
     public String getLiteral()

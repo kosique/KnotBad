@@ -10,7 +10,7 @@ public class Addition extends Binary
     {
         super();
     }
-    
+
     public Addition(Node child1, Node child2)
     {
         super(child1, child2);
@@ -31,7 +31,7 @@ public class Addition extends Binary
     @Override
     public int getPrecedence()
     {
-        return 5;
+        return 10;
     }
 
     @Override

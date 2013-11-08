@@ -6,23 +6,21 @@ import de.diezwei.knotbad.parser.token.AssocType;
 
 public class Multiplication extends Binary
 {
-	public Multiplication()
+    public Multiplication()
     {
         super();
     }
 
     public Multiplication(Node child1, Node child2)
-	{
-		super(child1, child2);
-	}
+    {
+        super(child1, child2);
+    }
 
-	@Override
-	public double resolve()
-	{
-		return getLeftArgument().resolve() * getRightArgument().resolve();
-	}
-	
-	   
+    @Override
+    public double resolve()
+    {
+        return getLeftArgument().resolve() * getRightArgument().resolve();
+    }
 
     @Override
     public AssocType getAssocType()
@@ -33,9 +31,8 @@ public class Multiplication extends Binary
     @Override
     public int getPrecedence()
     {
-        return 15;
+        return 20;
     }
-    
 
     @Override
     public String getLiteral()

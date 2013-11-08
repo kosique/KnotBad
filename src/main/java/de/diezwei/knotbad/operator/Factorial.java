@@ -10,28 +10,25 @@ public class Factorial extends Unary
     {
         super();
     }
-    
-	public Factorial(Node child1)
-	{
-		super(child1);
-	}
 
-	@Override
-	public double resolve()
-	{
-		return factorialRecursive(getArgument().resolve());
-	}
+    public Factorial(Node child1)
+    {
+        super(child1);
+    }
 
-	private double factorialRecursive(final double value)
-	{
-		if (value <= 1)
-		{
-			return 1;
-		}
+    @Override
+    public double resolve()
+    {
+        return factorialRecursive(getArgument().resolve());
+    }
 
-		return (value * factorialRecursive(value - 1));
-	}
-	
+    private double factorialRecursive(final double value)
+    {
+        if (value <= 1) { return 1; }
+
+        return (value * factorialRecursive(value - 1));
+    }
+
     @Override
     public AssocType getAssocType()
     {
@@ -41,9 +38,8 @@ public class Factorial extends Unary
     @Override
     public int getPrecedence()
     {
-        return 10;
+        return 30;
     }
-    
 
     @Override
     public String getLiteral()

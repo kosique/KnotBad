@@ -14,45 +14,50 @@ import de.diezwei.knotbad.tokenizer.Token;
 
 public class ParserTest
 {
-	@Test
-	public void tokenizeNumber() throws Exception
-	{
-		final Parser parser = new Parser();
+    @Test
+    public void tokenizeNumber() throws Exception
+    {
+        final Parser parser = new Parser();
 
-		final List<Token> output = parser.toPostfix("1");
+        final List<Token> output = parser.toPostfix("1");
 
-		assertThat(output, hasSize(1));
-		assertThat(output, contains(numberToken("1.0")));
-	}
+        assertThat(output, hasSize(1));
+        assertThat(output, contains(numberToken("1.0")));
+    }
 
-	@Test
-	public void tokenizeSum() throws Exception
-	{
-		final Parser parser = new Parser();
+    @Test
+    public void tokenizeSum() throws Exception
+    {
+        final Parser parser = new Parser();
 
-		final List<Token> output = parser.toPostfix("1+2");
+        final List<Token> output = parser.toPostfix("1+2");
 
-		assertThat(output, hasSize(3));
-		assertThat(output, contains(numberToken("1.0"), numberToken("2.0"), operatorToken("+")));
-	}
+        assertThat(output, hasSize(3));
+        assertThat(output, contains(numberToken("1.0"), numberToken("2.0"), operatorToken("+")));
+    }
 
-	@Test
-	public void tokenizeLongExpression() throws Exception
-	{
-		final Parser parser = new Parser();
+    @Test
+    public void tokenizeFactorial() throws Exception
+    {
+        final Parser parser = new Parser();
 
-		final List<Token> output = parser.toPostfix("1+2*3-4*5+6");
+        final List<Token> output = parser.toPostfix("10! / 9!");
 
-		for (final Token token : output)
-		{
-			System.out.println(token.getLiteral());
-		}
+        assertThat(output, contains(numberToken("10.0"), operatorToken("!"), numberToken("9.0"), operatorToken("!"), operatorToken("/")));
+    }
 
-		assertThat(output, hasSize(11));
-		assertThat(
-				output,
-				contains(numberToken("1.0"), numberToken("2.0"), numberToken("3.0"), operatorToken("*"), operatorToken("+"), numberToken("4.0"),
-						numberToken("5.0"), operatorToken("*"), operatorToken("-"), numberToken("6.0"), operatorToken("+")));
-	}
+    @Test
+    public void tokenizeLongExpression() throws Exception
+    {
+        final Parser parser = new Parser();
+
+        final List<Token> output = parser.toPostfix("1+2*3-4*5+6");
+
+        assertThat(output, hasSize(11));
+        assertThat(
+                output,
+                contains(numberToken("1.0"), numberToken("2.0"), numberToken("3.0"), operatorToken("*"), operatorToken("+"), numberToken("4.0"),
+                        numberToken("5.0"), operatorToken("*"), operatorToken("-"), numberToken("6.0"), operatorToken("+")));
+    }
 
 }

@@ -6,23 +6,21 @@ import de.diezwei.knotbad.parser.token.AssocType;
 
 public class SquareRoot extends Unary
 {
-	public SquareRoot()
+    public SquareRoot()
     {
         super();
     }
 
     public SquareRoot(Node child1)
-	{
-		super(child1);
-	}
+    {
+        super(child1);
+    }
 
-	@Override
-	public double resolve()
-	{
-		return Math.sqrt(getArgument().resolve());
-	}
-	
-	   
+    @Override
+    public double resolve()
+    {
+        return Math.sqrt(getArgument().resolve());
+    }
 
     @Override
     public AssocType getAssocType()
@@ -33,9 +31,8 @@ public class SquareRoot extends Unary
     @Override
     public int getPrecedence()
     {
-        return 10;
+        return 30;
     }
-    
 
     @Override
     public String getLiteral()
