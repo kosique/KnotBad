@@ -27,4 +27,7 @@ Then the solver calculates an result of 9
 
 Given an input reading (((1+2)*(3+4))-11)!
 Then the solver calculates an result of 3628800
+
+Given an input reading (((1+2)!)+(1+2!)+1)!
+Then the solver calculates an result of 3628800
   
