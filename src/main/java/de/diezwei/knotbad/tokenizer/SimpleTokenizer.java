@@ -20,30 +20,6 @@ public class SimpleTokenizer implements Tokenizer
 
     private final String input;
 
-    // WENN Token IST öffnende-Klammer:
-    //
-    // Token ZU Stack.
-    //
-    // ENDEWENN
-    // WENN Token IST schließende-Klammer:
-    //
-    // BIS Stack-Spitze IST öffnende-Klammer:
-    //
-    // FEHLER-BEI Stack IST-LEER:
-    //
-    // GRUND (1) Der schließenden Klammer geht keine öffnende voraus.
-    //
-    // ENDEFEHLER
-    // Stack-Spitze ZU Ausgabe.
-    //
-    // ENDEBIS
-    // Stack-Spitze (öffnende-Klammer) entfernen
-    // WENN Stack-Spitze IST-Funktion:
-    //
-    // Stack-Spitze ZU Ausgabe.
-    //
-    // ENDEWENN
-
     static class SimpleTokenizerIterator implements Iterator<Token>
     {
 

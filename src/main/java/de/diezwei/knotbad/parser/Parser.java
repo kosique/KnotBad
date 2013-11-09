@@ -1,6 +1,5 @@
 package de.diezwei.knotbad.parser;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -11,6 +10,7 @@ import de.diezwei.knotbad.node.Operators;
 import de.diezwei.knotbad.parser.token.AssocType;
 import de.diezwei.knotbad.tokenizer.SimpleTokenizer;
 import de.diezwei.knotbad.tokenizer.Token;
+import de.diezwei.knotbad.tokenizer.TokenType;
 
 public class Parser
 {
@@ -19,24 +19,14 @@ public class Parser
 
     public Node parse(String input)
     {
-        // TODO: Refactor - ugly as hell
-        List<Token> postfix;
-
-        try
-        {
-            postfix = toPostfix(input);
-        }
-        catch (final IOException e)
-        {
-            e.printStackTrace();
-            return null;
-        }
+        final List<Token> postfix = toPostfix(input);
 
         final TreeBuilder treeBuilder = new TreeBuilder();
+
         return treeBuilder.toNode(postfix);
     }
 
-    List<Token> toPostfix(String input) throws IOException
+    List<Token> toPostfix(String input)
     {
         final Tokenizer tokenizer = new SimpleTokenizer(input);
         for (final Token token : tokenizer)
@@ -52,12 +42,21 @@ public class Parser
             case NUMBER:
 
                 processValue(token);
-
                 break;
+
             case OPERATOR_TOKEN:
 
                 processOperator(token);
+                break;
 
+            case BRACE_CLOSE:
+
+                processClosingBrace();
+                break;
+
+            case BRACE_OPEN:
+
+                processOpeningBrace(token);
                 break;
             }
         }
@@ -68,6 +67,21 @@ public class Parser
         }
 
         return output;
+    }
+
+    private void processOpeningBrace(final Token token)
+    {
+        stack.push(token);
+    }
+
+    private void processClosingBrace()
+    {
+        while (!stack.lastElement().getLiteral().equals("("))
+        {
+            output.add(stack.pop());
+        }
+
+        stack.pop();
     }
 
     private boolean processValue(Token value)
@@ -83,10 +97,11 @@ public class Parser
 
         if (!stack.empty())
         {
-
             final int tokenPrecedence = operators.getPrecedence(literal);
 
             while (!stack.empty()
+                    && (stack.lastElement().getType() != TokenType.BRACE_CLOSE)
+                    && (stack.lastElement().getType() != TokenType.BRACE_OPEN)
                     && (((getStackAssocType() == AssocType.LEFT) && (getStackPrecedence() >= tokenPrecedence)) || (getStackPrecedence() > tokenPrecedence)))
             {
                 output.add(stack.pop());
