@@ -1,7 +1,7 @@
 package de.diezwei.knotbad.parser;
 
-import static de.diezwei.knotbad.tokenizer.Token.numberToken;
-import static de.diezwei.knotbad.tokenizer.Token.operatorToken;
+import static de.diezwei.knotbad.tokenizer.Token.number;
+import static de.diezwei.knotbad.tokenizer.Token.operator;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -26,7 +26,7 @@ public class TreeBuilderTest
     @Test
     public void testSingleValue()
     {
-        final List<Token> list = Arrays.asList(new Token[] { numberToken("1") });
+        final List<Token> list = Arrays.asList(new Token[] { number("1") });
         assertThat(builder.toNode(list), equalTo((Node) new Value(1)));
     }
 
@@ -34,7 +34,7 @@ public class TreeBuilderTest
     public void testSum()
     {
         // 1+2
-        final List<Token> list = Arrays.asList(new Token[] { numberToken("1"), numberToken("2"), operatorToken("+") });
+        final List<Token> list = Arrays.asList(new Token[] { number("1"), number("2"), operator("+") });
         final Node addition = new Addition(new Value(1), new Value(2));
         assertThat(builder.toNode(list), equalTo(addition));
     }
@@ -43,7 +43,7 @@ public class TreeBuilderTest
     public void testExpressionWithTwoOperators()
     {
         // 1+2-3
-        final List<Token> list = Arrays.asList(new Token[] { numberToken("1"), numberToken("2"), operatorToken("+"), numberToken("3"), operatorToken("-") });
+        final List<Token> list = Arrays.asList(new Token[] { number("1"), number("2"), operator("+"), number("3"), operator("-") });
 
         final Node addition = new Addition(new Value(1), new Value(2));
         final Node subtraction = new Subtraction(addition, new Value(3));
@@ -54,8 +54,8 @@ public class TreeBuilderTest
     public void testExpressionWithThreeOperators()
     {
         // (1+2)*(3-4)
-        final List<Token> list = Arrays.asList(new Token[] { numberToken("1"), numberToken("2"), operatorToken("+"), numberToken("3"), numberToken("4"), operatorToken("-"),
-                operatorToken("*") });
+        final List<Token> list = Arrays.asList(new Token[] { number("1"), number("2"), operator("+"), number("3"), number("4"), operator("-"),
+                operator("*") });
 
         final Node addition = new Addition(new Value(1), new Value(2));
         final Node subtraction = new Subtraction(new Value(3), new Value(4));
@@ -68,7 +68,7 @@ public class TreeBuilderTest
     public void testUnaryOperator()
     {
         // !5
-        final List<Token> list = Arrays.asList(new Token[] { numberToken("5"), operatorToken("!") });
+        final List<Token> list = Arrays.asList(new Token[] { number("5"), operator("!") });
         final Node factorial = new Factorial(new Value(5));
         assertThat(builder.toNode(list), equalTo(factorial));
     }
@@ -77,7 +77,7 @@ public class TreeBuilderTest
     public void testMixingUnaryAndBinaryOperators()
     {
         // !(2+3)
-        final List<Token> list = Arrays.asList(new Token[] { numberToken("2"), numberToken("3"), operatorToken("+"), operatorToken("!") });
+        final List<Token> list = Arrays.asList(new Token[] { number("2"), number("3"), operator("+"), operator("!") });
         final Node node = new Factorial(new Addition(new Value(2), new Value(3)));
         assertThat(builder.toNode(list), equalTo(node));
     }

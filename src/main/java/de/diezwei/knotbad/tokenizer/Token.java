@@ -1,5 +1,8 @@
 package de.diezwei.knotbad.tokenizer;
 
+import static de.diezwei.knotbad.tokenizer.TokenType.BRACE_CLOSE;
+import static de.diezwei.knotbad.tokenizer.TokenType.BRACE_OPEN;
+import static de.diezwei.knotbad.tokenizer.TokenType.OPERATOR_TOKEN;
 import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
 import de.diezwei.knotbad.node.NullOperator;
 import de.diezwei.knotbad.node.Operator;
@@ -22,27 +25,37 @@ public class Token
         return this.literal;
     }
 
-    public static Token streamEndToken()
+    public static Token streamend()
     {
         return new Token("", TokenType.STREAM_END);
     }
 
-    public static Token lineEndToken()
+    public static Token lineend()
     {
         return new Token("", TokenType.LINE_END);
     }
 
-    public static Token numberToken(String value)
+    public static Token number(String value)
     {
         return new Token(value, TokenType.NUMBER);
     }
 
-    public static Token operatorToken(String operator)
+    public static Token operator(String operator)
     {
-        return new Token(operator, TokenType.OPERATOR_TOKEN);
+        switch (operator)
+        {
+        case "(":
+            return new Token(operator, BRACE_OPEN);
+
+        case ")":
+            return new Token(operator, BRACE_CLOSE);
+
+        default:
+            return new Token(operator, OPERATOR_TOKEN);
+        }
     }
 
-    public static Token unknownToken(String word)
+    public static Token unknown(String word)
     {
         return new Token(word, TokenType.UNKNOWN);
     }

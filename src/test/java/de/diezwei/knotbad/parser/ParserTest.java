@@ -1,7 +1,7 @@
 package de.diezwei.knotbad.parser;
 
-import static de.diezwei.knotbad.tokenizer.Token.numberToken;
-import static de.diezwei.knotbad.tokenizer.Token.operatorToken;
+import static de.diezwei.knotbad.tokenizer.Token.number;
+import static de.diezwei.knotbad.tokenizer.Token.operator;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
@@ -22,7 +22,7 @@ public class ParserTest
         final List<Token> output = parser.toPostfix("1");
 
         assertThat(output, hasSize(1));
-        assertThat(output, contains(numberToken("1.0")));
+        assertThat(output, contains(number("1.0")));
     }
 
     @Test
@@ -33,7 +33,7 @@ public class ParserTest
         final List<Token> output = parser.toPostfix("1+2");
 
         assertThat(output, hasSize(3));
-        assertThat(output, contains(numberToken("1.0"), numberToken("2.0"), operatorToken("+")));
+        assertThat(output, contains(number("1.0"), number("2.0"), operator("+")));
     }
 
     @Test
@@ -43,7 +43,7 @@ public class ParserTest
 
         final List<Token> output = parser.toPostfix("10! / 9!");
 
-        assertThat(output, contains(numberToken("10.0"), operatorToken("!"), numberToken("9.0"), operatorToken("!"), operatorToken("/")));
+        assertThat(output, contains(number("10.0"), operator("!"), number("9.0"), operator("!"), operator("/")));
     }
 
     @Test
@@ -56,8 +56,8 @@ public class ParserTest
         assertThat(output, hasSize(11));
         assertThat(
                 output,
-                contains(numberToken("1.0"), numberToken("2.0"), numberToken("3.0"), operatorToken("*"), operatorToken("+"), numberToken("4.0"),
-                        numberToken("5.0"), operatorToken("*"), operatorToken("-"), numberToken("6.0"), operatorToken("+")));
+                contains(number("1.0"), number("2.0"), number("3.0"), operator("*"), operator("+"), number("4.0"),
+                        number("5.0"), operator("*"), operator("-"), number("6.0"), operator("+")));
     }
 
 }
