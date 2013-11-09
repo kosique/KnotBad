@@ -39,6 +39,10 @@
 
 	</dependencies>
 
+	<scm>
+		<developerConnection>scm:git:git@github.com:elclemente/KnotBad</developerConnection>
+	</scm>
+
 	<build>
 
 		<testResources>
@@ -67,31 +71,27 @@
 				<groupId>org.jbehave</groupId>
 				<artifactId>jbehave-maven-plugin</artifactId>
 				<!-- <version>[version]</version> -->
-			  <executions>
-                <execution>
-                    <id>run-stories</id>
-                    <phase>integration-test</phase>
-                    <!--<configuration>-->
-                        <!--
-                        You could list all the scenarios to be run herei using mulitple <scenarioClassName/>
-                        elements, but that seems really tedious, everytime you add a new scenario you'd have
-                        to modifiy the list.  -->
-                        <!--<scenarioClassNames>-->
-                        <!--<scenarioClassName>com.mindflowsolutions.example.AScenarioscenarioClassName>-->
-                        <!--</scenarioClassNames>-->
+				<executions>
+					<execution>
+						<id>run-stories</id>
+						<phase>integration-test</phase>
+						<configuration>
+							<includes>
+								<include>**/*Scenarios.java</include>
+							</includes>
+							<scope>test</scope>
+						</configuration>
+						<goals>
+							<goal>run-stories-as-embeddables</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
-                    <configuration>
-                        <includes>
-                            <include>**/*Scenarios.java</include>
-                        </includes>
-
-                        <scope>test</scope>
-                    </configuration>
-                    <goals>
-                        <goal>run-stories-as-embeddables</goal>
-                    </goals>
-                </execution>
-            </executions>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.4.2</version>
 			</plugin>
 
 		</plugins>
