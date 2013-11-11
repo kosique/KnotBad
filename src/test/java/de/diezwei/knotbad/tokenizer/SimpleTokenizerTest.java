@@ -139,9 +139,12 @@ public class SimpleTokenizerTest
 
 		assertThat(simpleTokenizer.getTokens(),
 				contains(
-						number("1.0"),
-						number("2.0"),
 						function("min"),
+						operator("("),
+						number("1.0"),
+						operator(","),
+						number("2.0"),
+						operator(")"),
 						streamend()));
 	}
 
