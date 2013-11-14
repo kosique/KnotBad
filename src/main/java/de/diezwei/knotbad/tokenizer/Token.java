@@ -2,8 +2,11 @@ package de.diezwei.knotbad.tokenizer;
 
 import static de.diezwei.knotbad.tokenizer.TokenType.BRACE_CLOSE;
 import static de.diezwei.knotbad.tokenizer.TokenType.BRACE_OPEN;
+import static de.diezwei.knotbad.tokenizer.TokenType.FUNCTION;
 import static de.diezwei.knotbad.tokenizer.TokenType.OPERATOR_TOKEN;
+import static de.diezwei.knotbad.tokenizer.TokenType.SEPARATOR;
 import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
+import de.diezwei.knotbad.node.Function;
 import de.diezwei.knotbad.node.NullOperator;
 import de.diezwei.knotbad.node.Operator;
 import de.diezwei.knotbad.node.Operators;
@@ -49,6 +52,9 @@ public class Token
 
 		case ")":
 			return new Token(operator, BRACE_CLOSE);
+
+		case ",":
+			return separator();
 
 		default:
 			return new Token(operator, OPERATOR_TOKEN);
@@ -127,6 +133,13 @@ public class Token
 		return instantiateOperator(opType);
 	}
 
+	public Function toFunction()
+	{
+		final Class<? extends Function> type = Operators.getInstance().getFunctionClass(getLiteral());
+
+		return instantiateFunction(type);
+	}
+
 	private static Operator instantiateOperator(final Class<? extends Operator> opType)
 	{
 		Operator operator;
@@ -141,9 +154,28 @@ public class Token
 		return operator;
 	}
 
+	private static Function instantiateFunction(final Class<? extends Function> type)
+	{
+		Function operator;
+		try
+		{
+			operator = type.newInstance();
+		}
+		catch (InstantiationException | IllegalAccessException e)
+		{
+			throw new UnexpectedKnotBadException("Cannot instantiate operator type " + type.getCanonicalName(), e);
+		}
+		return operator;
+	}
+
 	public static Token function(String function)
 	{
-		return new Token(function, TokenType.FUNCTION);
+		return new Token(function, FUNCTION);
+	}
+
+	public static Token separator()
+	{
+		return new Token(",", SEPARATOR);
 	}
 
 }

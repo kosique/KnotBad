@@ -3,7 +3,9 @@ package de.diezwei.knotbad.tokenizer;
 import static de.diezwei.knotbad.tokenizer.Token.function;
 import static de.diezwei.knotbad.tokenizer.Token.number;
 import static de.diezwei.knotbad.tokenizer.Token.operator;
+import static de.diezwei.knotbad.tokenizer.Token.separator;
 import static de.diezwei.knotbad.tokenizer.Token.streamend;
+import static de.diezwei.knotbad.tokenizer.Token.unknown;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
@@ -133,6 +135,17 @@ public class SimpleTokenizerTest
 	}
 
 	@Test
+	public void testInvalidMethodname()
+	{
+		final Tokenizer simpleTokenizer = new SimpleTokenizer("fjdkshdf");
+
+		assertThat(simpleTokenizer.getTokens(),
+				contains(
+						unknown("fjdkshdf"),
+						streamend()));
+	}
+
+	@Test
 	public void testMethodMin()
 	{
 		final Tokenizer simpleTokenizer = new SimpleTokenizer("min(1,2)");
@@ -142,7 +155,7 @@ public class SimpleTokenizerTest
 						function("min"),
 						operator("("),
 						number("1.0"),
-						operator(","),
+						separator(),
 						number("2.0"),
 						operator(")"),
 						streamend()));

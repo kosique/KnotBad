@@ -14,6 +14,7 @@ import java.util.List;
 
 import de.diezwei.knotbad.Tokenizer;
 import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
+import de.diezwei.knotbad.node.Operators;
 
 public class SimpleTokenizer implements Tokenizer
 {
@@ -83,7 +84,16 @@ public class SimpleTokenizer implements Tokenizer
 				case StreamTokenizer.TT_WORD:
 
 					final String word = tokenizer.sval;
-					this.preParsedTokens.add(function(word));
+
+					if (Operators.getInstance().isFunction(word))
+					{
+						this.preParsedTokens.add(function(word));
+					}
+					else
+					{
+						this.preParsedTokens.add(Token.unknown(word));
+					}
+
 					break;
 
 				default:

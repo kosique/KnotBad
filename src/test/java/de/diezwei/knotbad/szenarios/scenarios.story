@@ -31,3 +31,18 @@ Then the solver calculates an result of 3628800
 Given an input reading (((1+2)!)+(1+2!)+1)!
 Then the solver calculates an result of 3628800
   
+Given an input reading min(1,2)
+Then the solver calculates an result of 1
+
+Given an input reading min(1+2,2)
+Then the solver calculates an result of 2
+
+Given an input reading min(10+10+10,2*(3*4))
+Then the solver calculates an result of 24
+
+Given an input reading min(10+10+10,2*(3*4))-10
+Then the solver calculates an result of 14
+
+Given an input reading (min(10+10+10,2*(3*4))-14)!
+Then the solver calculates an result of 3628800
+  

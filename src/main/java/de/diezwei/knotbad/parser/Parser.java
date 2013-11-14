@@ -52,9 +52,20 @@ public class Parser
 
 	List<Token> toPostfix(String input)
 	{
+		System.out.println("-------------------------");
+		System.out.println("Parsing: " + input);
+		System.out.println("-------------------------");
+
 		final Tokenizer tokenizer = new SimpleTokenizer(input);
+
 		for (final Token token : tokenizer)
 		{
+			System.out.println();
+			System.out.println(" Stack: " + stack);
+			System.out.println("Output: " + output);
+			System.out.println();
+			System.out.println("Processing: " + token);
+
 			switch (token.getType())
 			{
 			case LINE_END:
@@ -82,6 +93,35 @@ public class Parser
 
 				processOpeningBrace(token);
 				break;
+
+			case SEPARATOR:
+
+				while (!"(".equals(stack.lastElement().getLiteral()))
+				{
+					output.add(stack.pop());
+				}
+
+				/*
+							    BIS Stack-Spitze IST öffnende-Klammer:
+
+							        Stack-Spitze ZU Ausgabe.
+							        FEHLER-BEI Stack IST-LEER:
+
+							            GRUND (1) Ein falsch platziertes Argumenttrennzeichen.
+							            GRUND (2) Der schließenden Klammer geht keine öffnende voraus.
+
+							        ENDEFEHLER
+
+							    ENDEBIS
+					*/
+				break;
+
+			case FUNCTION:
+
+				stack.push(token);
+
+				break;
+
 			}
 		}
 
@@ -126,7 +166,9 @@ public class Parser
 			while (!stack.empty()
 					&& (stack.lastElement().getType() != TokenType.BRACE_CLOSE)
 					&& (stack.lastElement().getType() != TokenType.BRACE_OPEN)
-					&& (((getStackAssocType() == AssocType.LEFT) && (getStackPrecedence() >= tokenPrecedence)) || (getStackPrecedence() > tokenPrecedence)))
+					&& (((getStackAssocType() == AssocType.LEFT)
+					&& (getStackPrecedence() >= tokenPrecedence))
+					|| (getStackPrecedence() > tokenPrecedence)))
 			{
 				output.add(stack.pop());
 			}
