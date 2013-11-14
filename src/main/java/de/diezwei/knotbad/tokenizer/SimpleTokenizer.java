@@ -1,5 +1,8 @@
 package de.diezwei.knotbad.tokenizer;
 
+import static de.diezwei.knotbad.tokenizer.Token.function;
+import static de.diezwei.knotbad.tokenizer.Token.number;
+import static de.diezwei.knotbad.tokenizer.Token.operator;
 import static java.util.Collections.unmodifiableList;
 
 import java.io.IOException;
@@ -11,6 +14,7 @@ import java.util.List;
 
 import de.diezwei.knotbad.Tokenizer;
 import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
+import de.diezwei.knotbad.node.Operators;
 
 public class SimpleTokenizer implements Tokenizer
 {
@@ -56,12 +60,12 @@ public class SimpleTokenizer implements Tokenizer
 				{
 				case StreamTokenizer.TT_EOF:
 
-					this.preParsedTokens.add(Token.streamEndToken());
+					this.preParsedTokens.add(Token.streamend());
 					break;
 
 				case StreamTokenizer.TT_EOL:
 
-					this.preParsedTokens.add(Token.lineEndToken());
+					this.preParsedTokens.add(Token.lineend());
 					break;
 
 				case StreamTokenizer.TT_NUMBER:
@@ -70,23 +74,34 @@ public class SimpleTokenizer implements Tokenizer
 
 					if (rawValue < 0)
 					{
-						this.preParsedTokens.add(Token.operatorToken("-"));
+						this.preParsedTokens.add(Token.operator("-"));
 					}
 
 					final String value = String.valueOf(Math.abs(rawValue));
-					this.preParsedTokens.add(Token.numberToken(value));
+					this.preParsedTokens.add(number(value));
 					break;
 
 				case StreamTokenizer.TT_WORD:
 
-					final String word = String.valueOf((char) tokenizer.ttype);
-					this.preParsedTokens.add(Token.unknownToken(word));
+					final String word = tokenizer.sval;
+
+					if (Operators.getInstance().isFunction(word))
+					{
+						this.preParsedTokens.add(function(word));
+					}
+					else
+					{
+						this.preParsedTokens.add(Token.unknown(word));
+					}
+
 					break;
 
 				default:
 
 					final String operator = String.valueOf((char) tokenizer.ttype);
-					this.preParsedTokens.add(Token.operatorToken(operator));
+
+					this.preParsedTokens.add(operator(operator));
+
 					break;
 				}
 			}
