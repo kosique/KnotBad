@@ -1,4 +1,6 @@
-package de.diezwei.knotbad.node;
+package de.diezwei.knotbad.function;
+
+import de.diezwei.knotbad.node.Function;
 
 public class Min extends Function
 {

@@ -20,6 +20,9 @@ Then the solver calculates an result of 3.5
 Given an input reading 10! / 9!
 Then the solver calculates an result of 10
 
+
+
+
 Scenario: Solving expressions with braces 
 
 Given an input reading (1+2)*3
@@ -30,6 +33,11 @@ Then the solver calculates an result of 3628800
 
 Given an input reading (((1+2)!)+(1+2!)+1)!
 Then the solver calculates an result of 3628800
+
+
+
+
+Scenario: Solving expressions with functions
   
 Given an input reading min(1,2)
 Then the solver calculates an result of 1

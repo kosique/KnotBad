@@ -11,7 +11,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.diezwei.knotbad.node.Min;
+import de.diezwei.knotbad.function.Min;
 import de.diezwei.knotbad.node.Node;
 import de.diezwei.knotbad.node.Value;
 import de.diezwei.knotbad.operator.Addition;
