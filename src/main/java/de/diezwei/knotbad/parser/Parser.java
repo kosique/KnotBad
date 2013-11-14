@@ -14,115 +14,181 @@ import de.diezwei.knotbad.tokenizer.TokenType;
 
 public class Parser
 {
-    private final Stack<Token> stack = new Stack<>();
-    private final List<Token> output = new ArrayList<>();
+	private final Stack<Token> stack = new Stack<>();
+	private final List<Token> output = new ArrayList<>();
 
-    public Node parse(String input)
-    {
-        final List<Token> postfix = toPostfix(input);
+	public Node parse(String input)
+	{
+		final List<Token> postfix = toPostfix(input);
 
-        final TreeBuilder treeBuilder = new TreeBuilder();
+		final TreeBuilder treeBuilder = new TreeBuilder();
 
-        return treeBuilder.toNode(postfix);
-    }
+		return treeBuilder.toNode(postfix);
+	}
 
-    List<Token> toPostfix(String input)
-    {
-        final Tokenizer tokenizer = new SimpleTokenizer(input);
-        for (final Token token : tokenizer)
-        {
-            switch (token.getType())
-            {
-            case LINE_END:
-            case STREAM_END:
-            case UNKNOWN:
+	/*
+	 *     WENN Token IST-Funktion:
 
-                break;
+	    Token ZU Stack.
 
-            case NUMBER:
+	ENDEWENN
+	WENN Token IST-Argumenttrennzeichen:
 
-                processValue(token);
-                break;
+	    BIS Stack-Spitze IST öffnende-Klammer:
 
-            case OPERATOR_TOKEN:
+	        Stack-Spitze ZU Ausgabe.
+	        FEHLER-BEI Stack IST-LEER:
 
-                processOperator(token);
-                break;
+	            GRUND (1) Ein falsch platziertes Argumenttrennzeichen.
+	            GRUND (2) Der schließenden Klammer geht keine öffnende voraus.
 
-            case BRACE_CLOSE:
+	        ENDEFEHLER
 
-                processClosingBrace();
-                break;
+	    ENDEBIS
 
-            case BRACE_OPEN:
+	ENDEWENN
 
-                processOpeningBrace(token);
-                break;
-            }
-        }
+	*/
 
-        while (!stack.isEmpty())
-        {
-            output.add(stack.pop());
-        }
+	List<Token> toPostfix(String input)
+	{
+		System.out.println("-------------------------");
+		System.out.println("Parsing: " + input);
+		System.out.println("-------------------------");
 
-        return output;
-    }
+		final Tokenizer tokenizer = new SimpleTokenizer(input);
 
-    private void processOpeningBrace(final Token token)
-    {
-        stack.push(token);
-    }
+		for (final Token token : tokenizer)
+		{
+			System.out.println();
+			System.out.println(" Stack: " + stack);
+			System.out.println("Output: " + output);
+			System.out.println();
+			System.out.println("Processing: " + token);
 
-    private void processClosingBrace()
-    {
-        while (!stack.lastElement().getLiteral().equals("("))
-        {
-            output.add(stack.pop());
-        }
+			switch (token.getType())
+			{
+			case LINE_END:
+			case STREAM_END:
+			case UNKNOWN:
 
-        stack.pop();
-    }
+				break;
 
-    private boolean processValue(Token value)
-    {
-        return output.add(value);
-    }
+			case NUMBER:
 
-    private void processOperator(Token token)
-    {
-        final Operators operators = Operators.getInstance();
+				processValue(token);
+				break;
 
-        final String literal = token.getLiteral();
+			case OPERATOR_TOKEN:
 
-        if (!stack.empty())
-        {
-            final int tokenPrecedence = operators.getPrecedence(literal);
+				processOperator(token);
+				break;
 
-            while (!stack.empty()
-                    && (stack.lastElement().getType() != TokenType.BRACE_CLOSE)
-                    && (stack.lastElement().getType() != TokenType.BRACE_OPEN)
-                    && (((getStackAssocType() == AssocType.LEFT) && (getStackPrecedence() >= tokenPrecedence)) || (getStackPrecedence() > tokenPrecedence)))
-            {
-                output.add(stack.pop());
-            }
-        }
+			case BRACE_CLOSE:
 
-        stack.add(token);
-    }
+				processClosingBrace();
+				break;
 
-    private int getStackPrecedence()
-    {
-        return Operators.getInstance().getPrecedence(stack.lastElement().getLiteral());
-    }
+			case BRACE_OPEN:
 
-    private AssocType getStackAssocType()
-    {
-        return Operators.getInstance().getAssocType(stack.lastElement().getLiteral());
-    }
+				processOpeningBrace(token);
+				break;
 
-    public List<Token> getOutput()
-    {
-        return output;
-    }
+			case SEPARATOR:
+
+				while (!"(".equals(stack.lastElement().getLiteral()))
+				{
+					output.add(stack.pop());
+				}
+
+				/*
+							    BIS Stack-Spitze IST öffnende-Klammer:
+
+							        Stack-Spitze ZU Ausgabe.
+							        FEHLER-BEI Stack IST-LEER:
+
+							            GRUND (1) Ein falsch platziertes Argumenttrennzeichen.
+							            GRUND (2) Der schließenden Klammer geht keine öffnende voraus.
+
+							        ENDEFEHLER
+
+							    ENDEBIS
+					*/
+				break;
+
+			case FUNCTION:
+
+				stack.push(token);
+
+				break;
+
+			}
+		}
+
+		while (!stack.isEmpty())
+		{
+			output.add(stack.pop());
+		}
+
+		return output;
+	}
+
+	private void processOpeningBrace(final Token token)
+	{
+		stack.push(token);
+	}
+
+	private void processClosingBrace()
+	{
+		while (!stack.lastElement().getLiteral().equals("("))
+		{
+			output.add(stack.pop());
+		}
+
+		stack.pop();
+	}
+
+	private boolean processValue(Token value)
+	{
+		return output.add(value);
+	}
+
+	private void processOperator(Token token)
+	{
+		final Operators operators = Operators.getInstance();
+
+		final String literal = token.getLiteral();
+
+		if (!stack.empty())
+		{
+			final int tokenPrecedence = operators.getPrecedence(literal);
+
+			while (!stack.empty()
+					&& (stack.lastElement().getType() != TokenType.BRACE_CLOSE)
+					&& (stack.lastElement().getType() != TokenType.BRACE_OPEN)
+					&& (((getStackAssocType() == AssocType.LEFT)
+					&& (getStackPrecedence() >= tokenPrecedence))
+					|| (getStackPrecedence() > tokenPrecedence)))
+			{
+				output.add(stack.pop());
+			}
+		}
+
+		stack.add(token);
+	}
+
+	private int getStackPrecedence()
+	{
+		return Operators.getInstance().getPrecedence(stack.lastElement().getLiteral());
+	}
+
+	private AssocType getStackAssocType()
+	{
+		return Operators.getInstance().getAssocType(stack.lastElement().getLiteral());
+	}
+
+	public List<Token> getOutput()
+	{
+		return output;
+	}
 }

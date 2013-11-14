@@ -1,8 +1,8 @@
 package de.diezwei.knotbad.tokenizer;
 
+import static de.diezwei.knotbad.tokenizer.Token.function;
 import static de.diezwei.knotbad.tokenizer.Token.number;
 import static de.diezwei.knotbad.tokenizer.Token.operator;
-import static de.diezwei.knotbad.tokenizer.Token.unknown;
 import static java.util.Collections.unmodifiableList;
 
 import java.io.IOException;
@@ -14,130 +14,140 @@ import java.util.List;
 
 import de.diezwei.knotbad.Tokenizer;
 import de.diezwei.knotbad.exception.UnexpectedKnotBadException;
+import de.diezwei.knotbad.node.Operators;
 
 public class SimpleTokenizer implements Tokenizer
 {
 
-    private final String input;
+	private final String input;
 
-    static class SimpleTokenizerIterator implements Iterator<Token>
-    {
+	static class SimpleTokenizerIterator implements Iterator<Token>
+	{
 
-        final StreamTokenizer tokenizer;
-        private final List<Token> preParsedTokens = new ArrayList<>();
-        private Token lastToken;
+		final StreamTokenizer tokenizer;
+		private final List<Token> preParsedTokens = new ArrayList<>();
+		private Token lastToken;
 
-        public SimpleTokenizerIterator(String input)
-        {
-            super();
-            tokenizer = new StreamTokenizer(new StringReader(input));
-            tokenizer.ordinaryChar('/');
-        }
+		public SimpleTokenizerIterator(String input)
+		{
+			super();
+			tokenizer = new StreamTokenizer(new StringReader(input));
+			tokenizer.ordinaryChar('/');
+		}
 
-        @Override
-        public boolean hasNext()
-        {
-            return (lastToken == null) || (lastToken.getType() != TokenType.STREAM_END);
-        }
+		@Override
+		public boolean hasNext()
+		{
+			return (lastToken == null) || (lastToken.getType() != TokenType.STREAM_END);
+		}
 
-        @Override
-        public Token next()
-        {
-            int type;
+		@Override
+		public Token next()
+		{
+			int type;
 
-            if (preParsedTokens.size() == 0)
-            {
-                try
-                {
-                    type = tokenizer.nextToken();
-                }
-                catch (final IOException e)
-                {
-                    throw new UnexpectedKnotBadException("Error while tokenizing", e);
-                }
-                switch (type)
-                {
-                case StreamTokenizer.TT_EOF:
+			if (preParsedTokens.size() == 0)
+			{
+				try
+				{
+					type = tokenizer.nextToken();
+				}
+				catch (final IOException e)
+				{
+					throw new UnexpectedKnotBadException("Error while tokenizing", e);
+				}
+				switch (type)
+				{
+				case StreamTokenizer.TT_EOF:
 
-                    this.preParsedTokens.add(Token.streamend());
-                    break;
+					this.preParsedTokens.add(Token.streamend());
+					break;
 
-                case StreamTokenizer.TT_EOL:
+				case StreamTokenizer.TT_EOL:
 
-                    this.preParsedTokens.add(Token.lineend());
-                    break;
+					this.preParsedTokens.add(Token.lineend());
+					break;
 
-                case StreamTokenizer.TT_NUMBER:
+				case StreamTokenizer.TT_NUMBER:
 
-                    final double rawValue = tokenizer.nval;
+					final double rawValue = tokenizer.nval;
 
-                    if (rawValue < 0)
-                    {
-                        this.preParsedTokens.add(Token.operator("-"));
-                    }
+					if (rawValue < 0)
+					{
+						this.preParsedTokens.add(Token.operator("-"));
+					}
 
-                    final String value = String.valueOf(Math.abs(rawValue));
-                    this.preParsedTokens.add(number(value));
-                    break;
+					final String value = String.valueOf(Math.abs(rawValue));
+					this.preParsedTokens.add(number(value));
+					break;
 
-                case StreamTokenizer.TT_WORD:
+				case StreamTokenizer.TT_WORD:
 
-                    final String word = String.valueOf((char) tokenizer.ttype);
-                    this.preParsedTokens.add(unknown(word));
-                    break;
+					final String word = tokenizer.sval;
 
-                default:
+					if (Operators.getInstance().isFunction(word))
+					{
+						this.preParsedTokens.add(function(word));
+					}
+					else
+					{
+						this.preParsedTokens.add(Token.unknown(word));
+					}
 
-                    final String operator = String.valueOf((char) tokenizer.ttype);
+					break;
 
-                    this.preParsedTokens.add(operator(operator));
+				default:
 
-                    break;
-                }
-            }
+					final String operator = String.valueOf((char) tokenizer.ttype);
 
-            lastToken = preParsedTokens.remove(0);
+					this.preParsedTokens.add(operator(operator));
 
-            return lastToken;
-        }
+					break;
+				}
+			}
 
-        @Override
-        public void remove()
-        {
-            // TODO Auto-generated method stub
+			lastToken = preParsedTokens.remove(0);
 
-        }
+			return lastToken;
+		}
 
-    }
+		@Override
+		public void remove()
+		{
+			// TODO Auto-generated method stub
 
-    public SimpleTokenizer(String input)
-    {
-        super();
-        this.input = format(input);
-    }
+		}
 
-    static String format(String input)
-    {
-        return input.replaceAll("([+*/-])", " $1 ").replaceAll("\\s{2,}", " ").trim();
-    }
+	}
 
-    @Override
-    public Iterator<Token> iterator()
-    {
-        return new SimpleTokenizerIterator(input);
-    }
+	public SimpleTokenizer(String input)
+	{
+		super();
+		this.input = format(input);
+	}
 
-    @Override
-    public List<Token> getTokens()
-    {
-        final List<Token> tokens = new ArrayList<>();
+	static String format(String input)
+	{
+		return input.replaceAll("([+*/-])", " $1 ").replaceAll("\\s{2,}", " ").trim();
+	}
 
-        for (final Token token : this)
-        {
-            tokens.add(token);
-        }
+	@Override
+	public Iterator<Token> iterator()
+	{
+		return new SimpleTokenizerIterator(input);
+	}
 
-        return unmodifiableList(tokens);
-    }
+	@Override
+	public List<Token> getTokens()
+	{
+		final List<Token> tokens = new ArrayList<>();
+
+		for (final Token token : this)
+		{
+			tokens.add(token);
+		}
+
+		return unmodifiableList(tokens);
+	}
 
 }
