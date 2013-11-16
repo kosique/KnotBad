@@ -72,14 +72,6 @@ public class SimpleTokenizer implements Tokenizer
 
                     final double rawValue = tokenizer.nval;
 
-                    // if (rawValue < 0)
-                    // {
-                    // this.preParsedTokens.add(Token.operator("-"));
-                    // }
-                    //
-                    // final String value = String.valueOf(Math.abs(rawValue));
-                    // this.preParsedTokens.add(number(value));
-
                     final String value = String.valueOf(rawValue);
 
                     if ((lastToken != null) && (lastToken.getType() == TokenType.NUMBER))
@@ -134,11 +126,6 @@ public class SimpleTokenizer implements Tokenizer
     {
         super();
         this.input = input;
-    }
-
-    static String format(String input)
-    {
-        return input.replaceAll("([+*/])", " $1 ").replaceAll("\\s{2,}", " ").trim();
     }
 
     @Override

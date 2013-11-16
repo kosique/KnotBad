@@ -8,7 +8,6 @@ import static de.diezwei.knotbad.tokenizer.Token.streamend;
 import static de.diezwei.knotbad.tokenizer.Token.unknown;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ public class SimpleTokenizerTest
 
         final List<String> tokens = toLiteralList(simpleTokenizer);
 
-        assertThat(tokens, contains("1.0", "-", "2.0", ""));
+        assertThat(tokens, contains("1.0", "+", "-2.0", ""));
     }
 
     @Test
@@ -67,7 +66,7 @@ public class SimpleTokenizerTest
 
         final List<String> tokens = toLiteralList(simpleTokenizer);
 
-        assertThat(tokens, contains("1.0", "-", "2.0", "*", "3.0", "/", "4.0", ""));
+        assertThat(tokens, contains("1.0", "+", "-2.0", "*", "3.0", "/", "4.0", ""));
     }
 
     @Test
@@ -112,8 +111,8 @@ public class SimpleTokenizerTest
         final List<Token> tokens = simpleTokenizer.getTokens();
 
         final Token token1 = Token.number("1.0");
-        final Token token2 = Token.operator("-");
-        final Token token3 = Token.number("2.0");
+        final Token token2 = Token.operator("+");
+        final Token token3 = Token.number("-2.0");
         final Token token4 = Token.operator("*");
         final Token token5 = Token.number("3.0");
         final Token token6 = Token.operator("/");
@@ -160,37 +159,4 @@ public class SimpleTokenizerTest
                         operator(")"),
                         streamend()));
     }
-
-    @Test
-    public void test()
-    {
-        final Tokenizer simpleTokenizer = new SimpleTokenizer("-1");
-
-        System.out.println(simpleTokenizer.getTokens());
-
-        assertThat(simpleTokenizer.getTokens(),
-                contains(
-                        function("min"),
-                        operator("("),
-                        number("1.0"),
-                        separator(),
-                        number("2.0"),
-                        operator(")"),
-                        streamend()));
-    }
-
-    @Test
-    public void testFormatter() throws Exception
-    {
-        assertThat(SimpleTokenizer.format(""), equalTo(""));
-        assertThat(SimpleTokenizer.format("1"), equalTo("1"));
-        assertThat(SimpleTokenizer.format("1+2"), equalTo("1 + 2"));
-        assertThat(SimpleTokenizer.format("1*2"), equalTo("1 * 2"));
-        assertThat(SimpleTokenizer.format("1/2"), equalTo("1 / 2"));
-        assertThat(SimpleTokenizer.format("1+2*3-4/2"), equalTo("1 + 2 * 3 - 4 / 2"));
-        assertThat(SimpleTokenizer.format(" 1+2 "), equalTo("1 + 2"));
-        assertThat(SimpleTokenizer.format(" 1        +2 "), equalTo("1 + 2"));
-        assertThat(SimpleTokenizer.format("1\t+2"), equalTo("1 + 2"));
-    }
-
 }
