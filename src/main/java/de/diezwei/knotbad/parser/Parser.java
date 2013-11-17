@@ -14,181 +14,187 @@ import de.diezwei.knotbad.tokenizer.TokenType;
 
 public class Parser
 {
-	private final Stack<Token> stack = new Stack<>();
-	private final List<Token> output = new ArrayList<>();
+    private final Stack<Token> stack = new Stack<>();
+    private final List<Token> output = new ArrayList<>();
 
-	public Node parse(String input)
-	{
-		final List<Token> postfix = toPostfix(input);
+    public Node parse(String input)
+    {
+        final List<Token> postfix = toPostfix(input);
 
-		final TreeBuilder treeBuilder = new TreeBuilder();
+        final TreeBuilder treeBuilder = new TreeBuilder();
 
-		return treeBuilder.toNode(postfix);
-	}
+        return treeBuilder.toNode(postfix);
+    }
 
-	/*
-	 *     WENN Token IST-Funktion:
+    /*
+     * WENN Token IST-Funktion:
+     * 
+     * Token ZU Stack.
+     * 
+     * ENDEWENN WENN Token IST-Argumenttrennzeichen:
+     * 
+     * BIS Stack-Spitze IST öffnende-Klammer:
+     * 
+     * Stack-Spitze ZU Ausgabe. FEHLER-BEI Stack IST-LEER:
+     * 
+     * GRUND (1) Ein falsch platziertes Argumenttrennzeichen. GRUND (2) Der
+     * schließenden Klammer geht keine öffnende voraus.
+     * 
+     * ENDEFEHLER
+     * 
+     * ENDEBIS
+     * 
+     * ENDEWENN
+     */
 
-	    Token ZU Stack.
+    List<Token> toPostfix(String input)
+    {
+        // System.out.println("-------------------------");
+        // System.out.println("Parsing: " + input);
+        // System.out.println("-------------------------");
 
-	ENDEWENN
-	WENN Token IST-Argumenttrennzeichen:
+        final Tokenizer tokenizer = new SimpleTokenizer(input);
 
-	    BIS Stack-Spitze IST öffnende-Klammer:
+        for (final Token token : tokenizer)
+        {
+            // System.out.println();
+            // System.out.println(" Stack: " + stack);
+            // System.out.println("Output: " + output);
+            // System.out.println();
+            // System.out.println("Processing: " + token);
 
-	        Stack-Spitze ZU Ausgabe.
-	        FEHLER-BEI Stack IST-LEER:
+            switch (token.getType())
+            {
+            case LINE_END:
+            case STREAM_END:
+            case UNKNOWN:
 
-	            GRUND (1) Ein falsch platziertes Argumenttrennzeichen.
-	            GRUND (2) Der schließenden Klammer geht keine öffnende voraus.
+                break;
 
-	        ENDEFEHLER
+            case NUMBER:
 
-	    ENDEBIS
+                processValue(token);
+                break;
 
-	ENDEWENN
+            case VARIABLE:
 
-	*/
+                processVariable(token);
+                break;
 
-	List<Token> toPostfix(String input)
-	{
-		System.out.println("-------------------------");
-		System.out.println("Parsing: " + input);
-		System.out.println("-------------------------");
+            case OPERATOR_TOKEN:
 
-		final Tokenizer tokenizer = new SimpleTokenizer(input);
+                processOperator(token);
+                break;
 
-		for (final Token token : tokenizer)
-		{
-			System.out.println();
-			System.out.println(" Stack: " + stack);
-			System.out.println("Output: " + output);
-			System.out.println();
-			System.out.println("Processing: " + token);
+            case BRACE_CLOSE:
 
-			switch (token.getType())
-			{
-			case LINE_END:
-			case STREAM_END:
-			case UNKNOWN:
+                processClosingBrace();
+                break;
 
-				break;
+            case BRACE_OPEN:
 
-			case NUMBER:
+                processOpeningBrace(token);
+                break;
 
-				processValue(token);
-				break;
+            case SEPARATOR:
 
-			case OPERATOR_TOKEN:
+                while (!"(".equals(stack.lastElement().getLiteral()))
+                {
+                    output.add(stack.pop());
+                }
 
-				processOperator(token);
-				break;
+                /*
+                 * BIS Stack-Spitze IST öffnende-Klammer:
+                 * 
+                 * Stack-Spitze ZU Ausgabe. FEHLER-BEI Stack IST-LEER:
+                 * 
+                 * GRUND (1) Ein falsch platziertes Argumenttrennzeichen. GRUND
+                 * (2) Der schließenden Klammer geht keine öffnende voraus.
+                 * 
+                 * ENDEFEHLER
+                 * 
+                 * ENDEBIS
+                 */
+                break;
 
-			case BRACE_CLOSE:
+            case FUNCTION:
 
-				processClosingBrace();
-				break;
+                stack.push(token);
 
-			case BRACE_OPEN:
+                break;
 
-				processOpeningBrace(token);
-				break;
+            }
+        }
 
-			case SEPARATOR:
+        while (!stack.isEmpty())
+        {
+            output.add(stack.pop());
+        }
 
-				while (!"(".equals(stack.lastElement().getLiteral()))
-				{
-					output.add(stack.pop());
-				}
+        return output;
+    }
 
-				/*
-							    BIS Stack-Spitze IST öffnende-Klammer:
+    private void processOpeningBrace(final Token token)
+    {
+        stack.push(token);
+    }
 
-							        Stack-Spitze ZU Ausgabe.
-							        FEHLER-BEI Stack IST-LEER:
+    private void processClosingBrace()
+    {
+        while (!stack.lastElement().getLiteral().equals("("))
+        {
+            output.add(stack.pop());
+        }
 
-							            GRUND (1) Ein falsch platziertes Argumenttrennzeichen.
-							            GRUND (2) Der schließenden Klammer geht keine öffnende voraus.
+        stack.pop();
+    }
 
-							        ENDEFEHLER
+    private boolean processValue(Token value)
+    {
+        return output.add(value);
+    }
 
-							    ENDEBIS
-					*/
-				break;
+    private boolean processVariable(Token variable)
+    {
+        return output.add(variable);
+    }
 
-			case FUNCTION:
+    private void processOperator(Token token)
+    {
+        final Operators operators = Operators.getInstance();
 
-				stack.push(token);
+        final String literal = token.getLiteral();
 
-				break;
+        if (!stack.empty())
+        {
+            final int tokenPrecedence = operators.getPrecedence(literal);
 
-			}
-		}
+            while (!stack.empty()
+                    && (stack.lastElement().getType() != TokenType.BRACE_CLOSE)
+                    && (stack.lastElement().getType() != TokenType.BRACE_OPEN)
+                    && (((getStackAssocType() == AssocType.LEFT)
+                    && (getStackPrecedence() >= tokenPrecedence))
+                    || (getStackPrecedence() > tokenPrecedence)))
+            {
+                output.add(stack.pop());
+            }
+        }
 
-		while (!stack.isEmpty())
-		{
-			output.add(stack.pop());
-		}
+        stack.add(token);
+    }
 
-		return output;
-	}
+    private int getStackPrecedence()
+    {
+        return Operators.getInstance().getPrecedence(stack.lastElement().getLiteral());
+    }
 
-	private void processOpeningBrace(final Token token)
-	{
-		stack.push(token);
-	}
+    private AssocType getStackAssocType()
+    {
+        return Operators.getInstance().getAssocType(stack.lastElement().getLiteral());
+    }
 
-	private void processClosingBrace()
-	{
-		while (!stack.lastElement().getLiteral().equals("("))
-		{
-			output.add(stack.pop());
-		}
-
-		stack.pop();
-	}
-
-	private boolean processValue(Token value)
-	{
-		return output.add(value);
-	}
-
-	private void processOperator(Token token)
-	{
-		final Operators operators = Operators.getInstance();
-
-		final String literal = token.getLiteral();
-
-		if (!stack.empty())
-		{
-			final int tokenPrecedence = operators.getPrecedence(literal);
-
-			while (!stack.empty()
-					&& (stack.lastElement().getType() != TokenType.BRACE_CLOSE)
-					&& (stack.lastElement().getType() != TokenType.BRACE_OPEN)
-					&& (((getStackAssocType() == AssocType.LEFT)
-					&& (getStackPrecedence() >= tokenPrecedence))
-					|| (getStackPrecedence() > tokenPrecedence)))
-			{
-				output.add(stack.pop());
-			}
-		}
-
-		stack.add(token);
-	}
-
-	private int getStackPrecedence()
-	{
-		return Operators.getInstance().getPrecedence(stack.lastElement().getLiteral());
-	}
-
-	private AssocType getStackAssocType()
-	{
-		return Operators.getInstance().getAssocType(stack.lastElement().getLiteral());
-	}
-
-	public List<Token> getOutput()
-	{
-		return output;
-	}
+    public List<Token> getOutput()
+    {
+        return output;
+    }
 }

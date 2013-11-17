@@ -1,22 +1,26 @@
 package de.diezwei.knotbad.node;
 
+import static java.util.Arrays.asList;
+
+import java.util.List;
+
 public abstract class Binary extends Operator
 {
-	private  Node rightArgument;
-    private  Node leftArgument;
+    private Node rightArgument;
+    private Node leftArgument;
 
-	public Binary(Node leftArgument, Node rightArgument)
-	{
-		super();
-		this.leftArgument = leftArgument;
-		this.rightArgument = rightArgument;
-	}
-
-	public Binary()
+    public Binary(Node leftArgument, Node rightArgument)
     {
-	    this(new NullNode(), new NullNode());
+        super();
+        this.leftArgument = leftArgument;
+        this.rightArgument = rightArgument;
     }
-	
+
+    public Binary()
+    {
+        this(new NullNode(), new NullNode());
+    }
+
     public Node getLeftArgument()
     {
         return leftArgument;
@@ -29,7 +33,7 @@ public abstract class Binary extends Operator
 
     public Node getRightArgument()
     {
-    	return rightArgument;
+        return rightArgument;
     }
 
     public void setRightArgument(Node rightArgument)
@@ -38,8 +42,14 @@ public abstract class Binary extends Operator
     }
 
     @Override
+    public List<Node> getChildren()
+    {
+        return asList(new Node[] { getLeftArgument(), getRightArgument() });
+    }
+
+    @Override
     public int getArity()
     {
-        return 2; 
+        return 2;
     }
 }

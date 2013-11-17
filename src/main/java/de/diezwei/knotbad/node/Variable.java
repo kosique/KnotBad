@@ -4,32 +4,33 @@ import static java.util.Collections.emptyList;
 
 import java.util.List;
 
+import de.diezwei.knotbad.exception.VariableNotBoundException;
 import de.diezwei.knotbad.parser.token.AssocType;
 
-public class Value extends Node
+public class Variable extends Node
 {
-    private final double value;
 
-    public Value(final int value)
-    {
-        this.value = value;
-    }
+    private Double boundValue;
+    private final String literal;
 
-    public Value(final double value)
+    public Variable(String literal)
     {
-        this.value = value;
+        super();
+        this.literal = literal;
     }
 
     @Override
     public double resolve()
     {
-        return value;
+        if (boundValue != null) { return boundValue; }
+
+        throw new VariableNotBoundException(this);
     }
 
     @Override
     public String getLiteral()
     {
-        return String.valueOf(value);
+        return literal;
     }
 
     @Override
@@ -42,6 +43,11 @@ public class Value extends Node
     public int getPrecedence()
     {
         return 0;
+    }
+
+    public void bind(double value)
+    {
+        this.boundValue = value;
     }
 
     @Override

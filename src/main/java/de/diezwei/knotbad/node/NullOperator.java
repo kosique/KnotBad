@@ -1,5 +1,9 @@
 package de.diezwei.knotbad.node;
 
+import static java.util.Collections.emptyList;
+
+import java.util.List;
+
 import org.apache.commons.lang.NotImplementedException;
 
 import de.diezwei.knotbad.parser.token.AssocType;
@@ -34,5 +38,11 @@ public class NullOperator extends Operator
     public int getArity()
     {
         throw new NotImplementedException("This is a NullOperator");
+    }
+
+    @Override
+    public List<Node> getChildren()
+    {
+        return emptyList();
     }
 }
