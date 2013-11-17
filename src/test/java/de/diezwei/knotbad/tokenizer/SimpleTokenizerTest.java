@@ -5,7 +5,7 @@ import static de.diezwei.knotbad.tokenizer.Token.number;
 import static de.diezwei.knotbad.tokenizer.Token.operator;
 import static de.diezwei.knotbad.tokenizer.Token.separator;
 import static de.diezwei.knotbad.tokenizer.Token.streamend;
-import static de.diezwei.knotbad.tokenizer.Token.unknown;
+import static de.diezwei.knotbad.tokenizer.Token.variable;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
@@ -140,7 +140,7 @@ public class SimpleTokenizerTest
 
         assertThat(simpleTokenizer.getTokens(),
                 contains(
-                        unknown("fjdkshdf"),
+                        variable("fjdkshdf"),
                         streamend()));
     }
 

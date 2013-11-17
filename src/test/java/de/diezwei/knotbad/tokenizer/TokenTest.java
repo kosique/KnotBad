@@ -17,7 +17,7 @@ public class TokenTest
         assertThat(Token.operator("("), equalTo(new Token("(", TokenType.BRACE_OPEN)));
         assertThat(Token.operator(")"), equalTo(new Token(")", TokenType.BRACE_CLOSE)));
         assertThat(Token.streamend(), equalTo(new Token("", TokenType.STREAM_END)));
-        assertThat(Token.unknown("1"), equalTo(new Token("1", TokenType.UNKNOWN)));
+        assertThat(Token.variable("1"), equalTo(new Token("1", TokenType.VARIABLE)));
     }
 
 }

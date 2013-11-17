@@ -93,7 +93,7 @@ public class SimpleTokenizer implements Tokenizer
                     }
                     else
                     {
-                        this.preParsedTokens.add(Token.unknown(word));
+                        this.preParsedTokens.add(Token.variable(word));
                     }
 
                     break;

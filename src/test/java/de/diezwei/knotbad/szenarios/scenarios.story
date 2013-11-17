@@ -8,7 +8,7 @@ Scenario:  Solving smaller expressiong
 Given an input reading 1 + 2
 Then the solver calculates an result of 3  
 
-Given an input reading 1 - 2
+Given an input reading 1-2
 Then the solver calculates an result of -1  
 
 Given an input reading 1 + 2 * 3
@@ -19,6 +19,27 @@ Then the solver calculates an result of 3.5
 
 Given an input reading 10! / 9!
 Then the solver calculates an result of 10
+
+
+Scenario: Variables 
+
+Given an input reading x
+When the variable x is bound to 5
+Then the solver calculates an result of 5
+
+Given an input reading x+5
+When the variable x is bound to 2
+Then the solver calculates an result of 7
+
+Given an input reading x
+Then the solver throws an exception
+
+Given an input reading (x+5)*y - z
+When the variable x is bound to 5
+When the variable y is bound to 3
+When the variable z is bound to 20
+Then the solver calculates an result of 10
+
 
 
 

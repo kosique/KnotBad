@@ -10,6 +10,7 @@ import de.diezwei.knotbad.node.Operator;
 import de.diezwei.knotbad.node.Operators;
 import de.diezwei.knotbad.node.Unary;
 import de.diezwei.knotbad.node.Value;
+import de.diezwei.knotbad.node.Variable;
 import de.diezwei.knotbad.operator.Addition;
 import de.diezwei.knotbad.operator.Division;
 import de.diezwei.knotbad.operator.Factorial;
@@ -30,11 +31,21 @@ public abstract class NodeFactory
             return toValue(token);
 
         case OPERATOR_TOKEN:
+
             return toOperator(token);
+
+        case VARIABLE:
+
+            return toVariable(token);
 
         default:
             throw new UnexpectedKnotBadException("Unsupported token type: " + token.getType());
         }
+    }
+
+    private static Node toVariable(Token token)
+    {
+        return new Variable(token.getLiteral());
     }
 
     private static Node toValue(Token token)

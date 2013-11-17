@@ -3,6 +3,7 @@ package de.diezwei.knotbad.parser;
 import static de.diezwei.knotbad.tokenizer.Token.function;
 import static de.diezwei.knotbad.tokenizer.Token.number;
 import static de.diezwei.knotbad.tokenizer.Token.operator;
+import static de.diezwei.knotbad.tokenizer.Token.variable;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
@@ -163,6 +164,30 @@ public class ParserTest
                         operator("+"),
                         operator("*"),
                         function("min")
+                ));
+    }
+
+    @Test
+    public void testVariable() throws Exception
+    {
+        assertThat(new Parser().toPostfix("x"),
+                contains(
+                variable("x")
+                ));
+    }
+
+    @Test
+    public void variablesANdValues() throws Exception
+    {
+        assertThat(new Parser().toPostfix("(x+1)*2/y"),
+                contains(
+                        variable("x"),
+                        number("1.0"),
+                        operator("+"),
+                        number("2.0"),
+                        operator("*"),
+                        variable("y"),
+                        operator("/")
                 ));
     }
 }
